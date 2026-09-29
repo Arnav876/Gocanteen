@@ -43,11 +43,41 @@ export const parseApiError = (error: unknown): string => {
       return 'Invalid email or password.';
     }
     if (axiosErr.response.status === 403) {
-      return 'Access forbidden. You do not have permission for this role.';
+      return 'Access forbidden. You do not have permission for this action.';
     }
   }
   return 'An unexpected error occurred. Please try again.';
 };
+
+export interface CreateFoodPayload {
+  name: string;
+  description?: string;
+  categoryId: string;
+  price: number;
+  imageUrl?: string;
+  isVeg?: boolean;
+  isVegan?: boolean;
+  isHalal?: boolean;
+  isGlutenFree?: boolean;
+  minPrepMinutes?: number;
+  maxPrepMinutes?: number;
+  availability?: 'AVAILABLE' | 'UNAVAILABLE';
+}
+
+export interface UpdateFoodPayload {
+  name?: string;
+  description?: string | null;
+  categoryId?: string;
+  price?: number;
+  imageUrl?: string | null;
+  isVeg?: boolean;
+  isVegan?: boolean;
+  isHalal?: boolean;
+  isGlutenFree?: boolean;
+  minPrepMinutes?: number;
+  maxPrepMinutes?: number;
+  availability?: 'AVAILABLE' | 'UNAVAILABLE';
+}
 
 export const api = {
   // Health
@@ -106,9 +136,28 @@ export const api = {
       const res = await apiClient.get<{ success: boolean; data: FoodItem[] }>('/foods', { params });
       return res.data.data;
     },
+    getMyMenu: async (): Promise<FoodItem[]> => {
+      const res = await apiClient.get<{ success: boolean; data: FoodItem[] }>('/foods/my-menu');
+      return res.data.data;
+    },
     getById: async (id: string): Promise<FoodItem> => {
       const res = await apiClient.get<{ success: boolean; data: FoodItem }>(`/foods/${id}`);
       return res.data.data;
+    },
+    create: async (payload: CreateFoodPayload): Promise<FoodItem> => {
+      const res = await apiClient.post<{ success: boolean; data: FoodItem }>('/foods', payload);
+      return res.data.data;
+    },
+    update: async (id: string, payload: UpdateFoodPayload): Promise<FoodItem> => {
+      const res = await apiClient.patch<{ success: boolean; data: FoodItem }>(`/foods/${id}`, payload);
+      return res.data.data;
+    },
+    toggleAvailability: async (id: string): Promise<FoodItem> => {
+      const res = await apiClient.patch<{ success: boolean; data: FoodItem }>(`/foods/${id}/toggle-availability`);
+      return res.data.data;
+    },
+    delete: async (id: string): Promise<void> => {
+      await apiClient.delete(`/foods/${id}`);
     },
   },
 
