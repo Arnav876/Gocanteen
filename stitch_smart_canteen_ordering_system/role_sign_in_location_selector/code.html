@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CampusBites - Welcome &amp; Location Access</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Plus Jakarta Sans Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#283044",
+            "surface-container-low": "#f2f3ff",
+            "inverse-on-surface": "#eef0ff",
+            "primary": "#a33900",
+            "secondary-container": "#fea619",
+            "secondary-fixed-dim": "#ffb95f",
+            "primary-fixed-dim": "#ffb599",
+            "on-primary-fixed": "#370e00",
+            "on-tertiary-container": "#f5fff6",
+            "surface-bright": "#faf8ff",
+            "surface-variant": "#dae2fd",
+            "tertiary-container": "#00855b",
+            "on-background": "#131b2e",
+            "outline": "#8e7166",
+            "surface-container-highest": "#dae2fd",
+            "on-primary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "on-secondary-fixed": "#2a1700",
+            "outline-variant": "#e2bfb2",
+            "inverse-primary": "#ffb599",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#684000",
+            "primary-fixed": "#ffdbce",
+            "surface": "#faf8ff",
+            "error-container": "#ffdad6",
+            "on-surface": "#131b2e",
+            "on-primary-fixed-variant": "#7f2b00",
+            "surface-container-high": "#e2e7ff",
+            "error": "#ba1a1a",
+            "tertiary-fixed": "#6ffbbe",
+            "background": "#faf8ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "surface-tint": "#a73a00",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-error-container": "#93000a",
+            "primary-container": "#cc4900",
+            "on-secondary-fixed-variant": "#653e00",
+            "on-tertiary-fixed": "#002113",
+            "surface-container": "#eaedff",
+            "tertiary": "#006947",
+            "secondary": "#855300",
+            "on-primary-container": "#fffbff",
+            "on-surface-variant": "#5a4138",
+            "secondary-fixed": "#ffddb8",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-lg": "3rem",
+            "gutter-md": "1.5rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "margin-md": "1.5rem",
+            "gutter-lg": "2rem"
+          },
+          "fontFamily": {
+            "label-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Shared Component: TopAppBar (Exact from JSON, Shell Border Ban adhered: shadow-sm, no border) -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-4 py-3 max-w-md mx-auto bg-surface dark:bg-inverse-surface shadow-sm dark:shadow-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary text-2xl" data-icon="restaurant">restaurant</span>
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">CampusBites</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-primary text-label-md font-label-md">
+<span class="material-symbols-outlined text-base" data-icon="location_on">location_on</span>
+<span>Main Campus</span>
+</div>
+</header>
+<!-- Main Content Container (Semantic Canvas, Auth & Location Flow) -->
+<main class="flex-1 w-full max-w-md mx-auto px-4 py-6 flex flex-col gap-6">
+<!-- Role Switch Toggle -->
+<div class="bg-surface-container rounded-xl p-1 flex items-center shadow-inner relative">
+<button class="flex-1 py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-label-lg text-label-lg transition-all duration-200 bg-surface-container-lowest text-primary shadow-sm font-bold" id="tab-student" onclick="setRole('student')" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="school">school</span>
+<span>Student / Staff (Customer)</span>
+</button>
+<button class="flex-1 py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-label-lg text-label-lg transition-all duration-200 text-on-surface-variant hover:text-on-surface" id="tab-partner" onclick="setRole('partner')" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="storefront">storefront</span>
+<span>Canteen Partner (Provider)</span>
+</button>
+</div>
+<!-- Dynamic Hero Message -->
+<div class="space-y-1">
+<h1 class="text-headline-lg font-headline-lg text-on-surface" id="hero-heading">
+        Quick campus pickup, zero queue.
+      </h1>
+<p class="text-body-md font-body-md text-on-surface-variant" id="hero-subheading">
+        Authenticate your student account and select your pickup counter.
+      </p>
+</div>
+<!-- Auth Card Form -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant/30 space-y-4">
+<div class="flex items-center justify-between pb-1 border-b border-outline-variant/20">
+<h2 class="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="lock">lock</span>
+<span id="auth-title">Campus Credentials</span>
+</h2>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed">FastAuth Enabled</span>
+</div>
+<form class="space-y-3.5" onsubmit="event.preventDefault();">
+<div>
+<label class="block text-label-md font-label-md text-on-surface-variant mb-1.5" for="identity-input" id="identity-label">
+            Student / Staff ID or Campus Email
+          </label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-lg" data-icon="badge">badge</span>
+</span>
+<input class="w-full pl-10 pr-3.5 py-2.5 rounded-lg border border-outline-variant/60 bg-surface-bright text-on-surface font-body-md text-body-md placeholder:text-outline/60 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="identity-input" placeholder="e.g. s1049281@univ.edu" type="text"/>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1.5">
+<label class="text-label-md font-label-md text-on-surface-variant" for="password-input">Security PIN / Password</label>
+<a class="text-label-sm font-label-sm text-primary hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-lg" data-icon="key">key</span>
+</span>
+<input class="w-full pl-10 pr-10 py-2.5 rounded-lg border border-outline-variant/60 bg-surface-bright text-on-surface font-body-md text-body-md placeholder:text-outline/60 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="password-input" placeholder="••••••••" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Quick 1-Tap Single Sign-On Pill -->
+<button class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-primary text-base" data-icon="school">school</span>
+<span>Log in with University Single Sign-On (SSO)</span>
+</button>
+</form>
+</section>
+<!-- Location & Pickup Hall Selector Bento Section -->
+<section class="space-y-3">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Select Campus Location</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Where are you picking up your meal?</p>
+</div>
+<!-- GPS Auto-Detect Button -->
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed hover:bg-primary-fixed-dim transition text-label-sm font-label-sm font-bold shadow-sm active:scale-95" onclick="detectLocation()" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="my_location">my_location</span>
+<span>Use current building</span>
+</button>
+</div>
+<!-- Quick-Access PIN or Building Search Input -->
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-lg" data-icon="search">search</span>
+</span>
+<input class="w-full pl-10 pr-24 py-2.5 rounded-xl border border-outline-variant/60 bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline/60 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition shadow-sm" id="location-search" placeholder="Search building, block, or enter 4-digit Hall PIN" type="text"/>
+<div class="absolute inset-y-1 right-1 flex items-center">
+<span class="px-2 py-1 rounded bg-surface-container text-label-sm font-label-sm text-outline">PIN / Code</span>
+</div>
+</div>
+<!-- Location Options Grid -->
+<div class="grid grid-cols-1 gap-2.5" id="location-cards">
+<!-- Location 1 (Selected State) -->
+<div class="location-card ring-2 ring-primary bg-surface-container-lowest p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition shadow-sm hover:shadow-md" onclick="selectLocation(this)">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed shrink-0 mt-0.5">
+<span class="material-symbols-outlined" data-icon="lunch_dining">lunch_dining</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface text-label-lg font-label-lg">Engineering Block Canteen</span>
+<span class="px-1.5 py-0.2 rounded text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container font-bold">Fast Lane</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Counter 2 (East Concourse) • 4-7 min prep</p>
+<div class="flex items-center gap-2 mt-1 text-label-sm font-label-sm text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span>Open • Normal crowd</span>
+</div>
+</div>
+</div>
+<div class="check-icon flex items-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Location 2 -->
+<div class="location-card border border-outline-variant/40 bg-surface-container-lowest p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition hover:border-outline shadow-sm" onclick="selectLocation(this)">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-surface shrink-0 mt-0.5">
+<span class="material-symbols-outlined" data-icon="local_cafe">local_cafe</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface text-label-lg font-label-lg">Central Student Center Hall</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Main Atrium • Ground Level • 12 stalls</p>
+<div class="flex items-center gap-2 mt-1 text-label-sm font-label-sm text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Moderate crowd • 8-12 min prep</span>
+</div>
+</div>
+</div>
+<div class="check-icon hidden items-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Location 3 -->
+<div class="location-card border border-outline-variant/40 bg-surface-container-lowest p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition hover:border-outline shadow-sm" onclick="selectLocation(this)">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-surface shrink-0 mt-0.5">
+<span class="material-symbols-outlined" data-icon="store">store</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-surface text-label-lg font-label-lg">North Campus Food Court</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Science Annex • Level 1 • Express counters</p>
+<div class="flex items-center gap-2 mt-1 text-label-sm font-label-sm text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>Open • Quick service</span>
+</div>
+</div>
+</div>
+<div class="check-icon hidden items-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Recently Ordered Locations Chips -->
+<div class="pt-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant block mb-2 font-bold tracking-wider">RECENTLY VISITED CANTEENS</span>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant/60 hover:border-primary text-on-surface text-label-sm font-label-sm flex items-center gap-1.5 transition" onclick="selectChip('Eng Block - Ctr 2')" type="button">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="history">history</span>
+<span>Eng Block Counter 2</span>
+</button>
+<button class="px-3 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant/60 hover:border-primary text-on-surface text-label-sm font-label-sm flex items-center gap-1.5 transition" onclick="selectChip('Library Café Bar')" type="button">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="history">history</span>
+<span>Library Express Counter</span>
+</button>
+<button class="px-3 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant/60 hover:border-primary text-on-surface text-label-sm font-label-sm flex items-center gap-1.5 transition" onclick="selectChip('Sports Hub Kiosk')" type="button">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="history">history</span>
+<span>Sports Hub Kiosk</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Provider Mode Contextual Alert / Hint -->
+<div class="hidden bg-secondary-fixed/40 border border-secondary-container rounded-xl p-3.5 flex items-start gap-3 transition-all" id="provider-hint">
+<span class="material-symbols-outlined text-secondary text-xl shrink-0 mt-0.5" data-icon="info">info</span>
+<div class="space-y-0.5">
+<p class="text-label-md font-label-md font-bold text-on-secondary-fixed">Registering a new food stall?</p>
+<p class="text-body-sm font-body-sm text-on-secondary-fixed-variant">
+          Configure counter location and kitchen access PIN directly on the provider portal after authorization.
+        </p>
+</div>
+</div>
+<!-- Primary Action CTA -->
+<div class="pt-2 pb-6">
+<button class="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-md hover:bg-primary-container active:scale-[0.98] transition-transform duration-150" id="submit-cta" type="button">
+<span id="cta-label">Enter Canteen</span>
+<span class="material-symbols-outlined text-xl" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="text-center text-body-sm font-body-sm text-outline mt-2.5">
+        Campus dining access is encrypted &amp; synchronized with university card services.
+      </p>
+</div>
+</main>
+<script>
+    let currentRole = 'student';
+
+    function setRole(role) {
+      currentRole = role;
+      const studentTab = document.getElementById('tab-student');
+      const partnerTab = document.getElementById('tab-partner');
+      const heroHeading = document.getElementById('hero-heading');
+      const heroSubheading = document.getElementById('hero-subheading');
+      const authTitle = document.getElementById('auth-title');
+      const identityLabel = document.getElementById('identity-label');
+      const identityInput = document.getElementById('identity-input');
+      const providerHint = document.getElementById('provider-hint');
+      const ctaLabel = document.getElementById('cta-label');
+
+      if (role === 'partner') {
+        // Toggle Styles
+        partnerTab.className = 'flex-1 py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-label-lg text-label-lg transition-all duration-200 bg-surface-container-lowest text-primary shadow-sm font-bold';
+        studentTab.className = 'flex-1 py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-label-lg text-label-lg transition-all duration-200 text-on-surface-variant hover:text-on-surface';
+
+        // Content updates
+        heroHeading.innerText = 'Kitchen Display & Stall Terminal';
+        heroSubheading.innerText = 'Log in with vendor credentials to manage active queue tickets.';
+        authTitle.innerText = 'Provider Merchant Access';
+        identityLabel.innerText = 'Partner ID or Stall Manager Email';
+        identityInput.placeholder = 'e.g. vendor-eng-counter2@cater.campus';
+        providerHint.classList.remove('hidden');
+        ctaLabel.innerText = 'Open Kitchen Terminal';
+      } else {
+        // Toggle Styles
+        studentTab.className = 'flex-1 py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-label-lg text-label-lg transition-all duration-200 bg-surface-container-lowest text-primary shadow-sm font-bold';
+        partnerTab.className = 'flex-1 py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 font-label-lg text-label-lg transition-all duration-200 text-on-surface-variant hover:text-on-surface';
+
+        // Content updates
+        heroHeading.innerText = 'Quick campus pickup, zero queue.';
+        heroSubheading.innerText = 'Authenticate your student account and select your pickup counter.';
+        authTitle.innerText = 'Campus Credentials';
+        identityLabel.innerText = 'Student / Staff ID or Campus Email';
+        identityInput.placeholder = 'e.g. s1049281@univ.edu';
+        providerHint.classList.add('hidden');
+        ctaLabel.innerText = 'Enter Canteen';
+      }
+    }
+
+    function selectLocation(element) {
+      const cards = document.querySelectorAll('.location-card');
+      cards.forEach(card => {
+        card.classList.remove('ring-2', 'ring-primary');
+        card.classList.add('border', 'border-outline-variant/40');
+        const checkIcon = card.querySelector('.check-icon');
+        if (checkIcon) {
+          checkIcon.classList.add('hidden');
+          checkIcon.classList.remove('flex');
+        }
+      });
+
+      element.classList.remove('border', 'border-outline-variant/40');
+      element.classList.add('ring-2', 'ring-primary');
+      const selectedIcon = element.querySelector('.check-icon');
+      if (selectedIcon) {
+        selectedIcon.classList.remove('hidden');
+        selectedIcon.classList.add('flex');
+      }
+    }
+
+    function selectChip(name) {
+      const search = document.getElementById('location-search');
+      search.value = name;
+      search.focus();
+    }
+
+    function detectLocation() {
+      const search = document.getElementById('location-search');
+      search.value = 'Engineering Block Canteen - Counter 2 (Auto-detected)';
+      search.classList.add('bg-secondary-fixed/20');
+      setTimeout(() => {
+        search.classList.remove('bg-secondary-fixed/20');
+      }, 1200);
+    }
+  </script>
+</body></html>

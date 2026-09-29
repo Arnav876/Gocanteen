@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface antialiased font-sans min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed;
+    margin: 0;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.material-symbols-outlined[data-weight="fill"] {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.custom-warm-shadow {
+  box-shadow: 0 4px 20px -2px rgba(163, 57, 0, 0.08), 0 2px 8px -2px rgba(19, 27, 46, 0.04);
+}
+
+.card-shadow {
+  box-shadow: 0 2px 8px -2px rgba(234, 88, 12, 0.05), 0 4px 16px -4px rgba(15, 23, 42, 0.06);
+}
+
+.tray-shadow {
+  box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.16), 0 2px 8px 0 rgba(234, 88, 12, 0.08);
+}
+
+.touch-depress:active {
+  transform: scale(0.98);
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}

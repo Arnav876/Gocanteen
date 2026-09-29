@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CampusBites - Menu &amp; Ordering</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#283044",
+            "surface-container-low": "#f2f3ff",
+            "inverse-on-surface": "#eef0ff",
+            "primary": "#a33900",
+            "secondary-container": "#fea619",
+            "secondary-fixed-dim": "#ffb95f",
+            "primary-fixed-dim": "#ffb599",
+            "on-primary-fixed": "#370e00",
+            "on-tertiary-container": "#f5fff6",
+            "surface-bright": "#faf8ff",
+            "surface-variant": "#dae2fd",
+            "tertiary-container": "#00855b",
+            "on-background": "#131b2e",
+            "outline": "#8e7166",
+            "surface-container-highest": "#dae2fd",
+            "on-primary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "on-secondary-fixed": "#2a1700",
+            "outline-variant": "#e2bfb2",
+            "inverse-primary": "#ffb599",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#684000",
+            "primary-fixed": "#ffdbce",
+            "surface": "#faf8ff",
+            "error-container": "#ffdad6",
+            "on-surface": "#131b2e",
+            "on-primary-fixed-variant": "#7f2b00",
+            "surface-container-high": "#e2e7ff",
+            "error": "#ba1a1a",
+            "tertiary-fixed": "#6ffbbe",
+            "background": "#faf8ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "surface-tint": "#a73a00",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-error-container": "#93000a",
+            "primary-container": "#cc4900",
+            "on-secondary-fixed-variant": "#653e00",
+            "on-tertiary-fixed": "#002113",
+            "surface-container": "#eaedff",
+            "tertiary": "#006947",
+            "secondary": "#855300",
+            "on-primary-container": "#fffbff",
+            "on-surface-variant": "#5a4138",
+            "secondary-fixed": "#ffddb8",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-lg": "3rem",
+            "gutter-md": "1.5rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "margin-md": "1.5rem",
+            "gutter-lg": "2rem"
+          },
+          "fontFamily": {
+            "label-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .card-shadow {
+      box-shadow: 0 2px 8px -2px rgba(234, 88, 12, 0.05), 0 4px 16px -4px rgba(15, 23, 42, 0.06);
+    }
+    .tray-shadow {
+      box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.16), 0 2px 8px 0 rgba(234, 88, 12, 0.08);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased pb-32">
+<!-- TopAppBar (Shared Component Implementation) -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-4 py-3 max-w-md mx-auto bg-surface dark:bg-inverse-surface shadow-sm dark:shadow-none">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="restaurant">restaurant</span>
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">CampusBites</span>
+</div>
+<!-- Location Context Pill & Avatar Action -->
+<div class="flex items-center space-x-2">
+<button class="flex items-center space-x-1 bg-surface-container hover:bg-surface-container-high px-2.5 py-1.5 rounded-full transition-transform active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary text-base" data-icon="location_on" data-weight="fill" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="text-label-sm font-label-sm text-on-surface truncate max-w-[110px]">Central Hub - Hall B</span>
+<span class="material-symbols-outlined text-outline text-xs" data-icon="expand_more">expand_more</span>
+</button>
+<div class="relative w-8 h-8 rounded-full ring-2 ring-primary-fixed overflow-hidden flex items-center justify-center bg-secondary-fixed">
+<img class="w-full h-full object-cover" data-alt="Close up profile picture of a young cheerful college student with glasses wearing a vibrant warm mustard hoodie smiling in a bright natural light campus courtyard setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaRz-Mw2udX_8LNUE54_YAe2OuB1LVOcdzFG_BRJBHAZip9Dy97okV_j7HuwzB1ix4vWHHGRPWBzAQOizEXs_4Nw20zUd1t1efX19GI2Zgb13F6Uy583DGZW-vajGTxn5uADWFysb97T_tnfIxFF3Ey_hvswn-K1JglvTa7YbIfkZhVdHxYldYtstTaqrveAnhYdAV5FhiChd3MkF3r-Wc8RDTzAPvZ4h1qBjTA0qjaYtc750_AVOtrg"/>
+</div>
+</div>
+</header>
+<!-- Main Mobile App Canvas Container -->
+<main class="max-w-md mx-auto px-4 pt-2 space-y-4">
+<!-- Live Campus Rush Banner -->
+<div class="flex items-center justify-between bg-primary-fixed/60 border border-outline-variant/40 rounded-xl px-3.5 py-2.5">
+<div class="flex items-center space-x-2">
+<div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-on-primary shadow-sm animate-pulse">
+<span class="material-symbols-outlined text-base" data-icon="bolt">bolt</span>
+</div>
+<div>
+<div class="text-label-md font-label-md text-on-primary-fixed flex items-center gap-1.5">
+<span>Lunch Rush Active</span>
+<span class="h-1.5 w-1.5 rounded-full bg-primary animate-ping"></span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant font-medium">Average prep time: <span class="font-bold text-primary">8 mins</span> across stalls</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface-container-lowest text-primary font-bold shadow-xs">High Flow</span>
+</div>
+</div>
+<!-- Search Input & Quick Filter Controls -->
+<div class="space-y-2.5">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-outline text-xl" data-icon="search">search</span>
+<input class="w-full h-12 pl-11 pr-11 bg-surface-container-lowest border border-outline-variant/60 rounded-xl text-body-md font-body-md text-on-surface placeholder-outline focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-xs" placeholder="Search stalls, bowl combos, snacks..." type="text"/>
+<button aria-label="Filters" class="absolute right-2.5 p-1.5 rounded-lg bg-surface-container-low text-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Quick Dietary & Prep Filter Badges -->
+<div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-0.5">
+<button class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-tertiary-container/15 text-tertiary border border-tertiary-container/30 text-label-sm font-label-sm whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="eco" data-weight="fill" style="font-variation-settings: 'FILL' 1;">eco</span>
+<span>Veg Only</span>
+</button>
+<button class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/50 text-label-sm font-label-sm whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="verified">verified</span>
+<span>Halal</span>
+</button>
+<button class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant border border-outline-variant/50 text-label-sm font-label-sm whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="grain">grain</span>
+<span>Gluten-Free</span>
+</button>
+<button class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-primary-fixed/40 text-primary font-bold border border-primary/20 text-label-sm font-label-sm whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span>&lt; 15 min Prep</span>
+</button>
+</div>
+</div>
+<!-- Category Pill Chips (Horizontal Carousel) -->
+<div class="pt-1">
+<div class="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-1">
+<button class="px-4 py-2 rounded-full bg-inverse-surface text-inverse-on-surface text-label-md font-label-md whitespace-nowrap shadow-xs">
+          All Menu
+        </button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/50 text-label-md font-label-md whitespace-nowrap hover:bg-surface-container transition-colors">
+          Bowls
+        </button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/50 text-label-md font-label-md whitespace-nowrap hover:bg-surface-container transition-colors">
+          Healthy Salads
+        </button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/50 text-label-md font-label-md whitespace-nowrap hover:bg-surface-container transition-colors">
+          Artisan Sandwiches
+        </button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/50 text-label-md font-label-md whitespace-nowrap hover:bg-surface-container transition-colors">
+          Smoothies &amp; Chai
+        </button>
+<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/50 text-label-md font-label-md whitespace-nowrap hover:bg-surface-container transition-colors">
+          Daily Combos
+        </button>
+</div>
+</div>
+<!-- Section Heading -->
+<div class="flex justify-between items-baseline pt-1">
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Popular for Lunch</h2>
+<span class="text-label-sm font-label-sm text-primary font-bold">14 Available Stalls</span>
+</div>
+<!-- Food Cards Feed (Bento / High-Touch Culinary Cards) -->
+<div class="space-y-4">
+<!-- Card 1: Warm Saffron Glow Grain Bowl -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden card-shadow border border-outline-variant/30 flex flex-col">
+<div class="relative w-full h-44 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Vibrant artisanal roasted chicken grain bowl with warm saffron turmeric rice, edamame beans, roasted purple sweet potato cubes, and creamy tahini drizzle on a modern ceramic plate set against a soft warm cream background with shallow depth of field in studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAodivw9BTAxpOIC7kreWhl6mjxbgnwyeDsAHODuJVvdxF2FgBC1m1rRUYPxpSJncpbMJh67kvvV3uN2eJNbaqmFP-9Qzme5UgVvLTQvFnfd-BTBBKwG_1YVzZDkSmZrAvjZW2sde3obgBeYRnG7es4zDkZ2sfJ42R1mYzbKsz0aSpPYW5xlrwAxhD5c6wG4NxajPCyo3FOHuS7WzFgC3aZ7KcXVVEWvrtqSOvOLe6ICt_ztMzInTgwCQ"/>
+<div class="absolute top-3 left-3 flex gap-1.5">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-tertiary text-label-sm font-label-sm flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-xs" data-icon="eco" data-weight="fill" style="font-variation-settings: 'FILL' 1;">eco</span> Halal Certified
+            </span>
+</div>
+<div class="absolute top-3 right-3">
+<span class="px-2.5 py-0.5 rounded-full bg-inverse-surface/85 backdrop-blur-md text-inverse-on-surface text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary-fixed" data-icon="schedule">schedule</span> 10-12 mins
+            </span>
+</div>
+</div>
+<div class="p-4 flex flex-col justify-between flex-1">
+<div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant mb-1">
+<span class="font-semibold text-secondary">Stall 04 • Gourmet Bowls</span>
+<span class="flex items-center gap-1 text-on-surface">
+<span class="material-symbols-outlined text-secondary-container text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (142)
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface leading-tight">Charred Harissa Chicken Saffron Bowl</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant line-clamp-2 mt-1">Saffron brown rice, tender marinated chicken breast, charred corn salsa, and smoked paprika yogurt.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between">
+<div>
+<span class="text-headline-md font-headline-md text-primary">$8.25</span>
+<span class="text-body-sm font-body-sm text-outline ml-1">540 kcal</span>
+</div>
+<!-- Stepper / Action Button -->
+<div class="flex items-center bg-surface-container-low rounded-full p-1 border border-outline-variant/40">
+<button aria-label="Decrease quantity" class="w-8 h-8 rounded-full bg-surface-container-lowest text-on-surface flex items-center justify-center active:scale-90 transition-transform shadow-xs">
+<span class="material-symbols-outlined text-sm" data-icon="remove">remove</span>
+</button>
+<span class="w-7 text-center text-label-md font-label-md font-bold text-on-surface">1</span>
+<button aria-label="Increase quantity" class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center active:scale-90 transition-transform shadow-xs">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<!-- Customization Hint Chip -->
+<div class="mt-2.5 flex items-center justify-between bg-surface-container-low/70 px-2.5 py-1.5 rounded-lg">
+<span class="text-body-sm font-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="tune">tune</span> Extra avocado &amp; spicy sauce chosen
+            </span>
+<button class="text-label-sm font-label-sm text-primary font-bold hover:underline">Edit</button>
+</div>
+</div>
+</article>
+<!-- Card 2: Crispy Falafel & Hummus Pocket -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden card-shadow border border-outline-variant/30 flex flex-col">
+<div class="relative w-full h-44 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Golden crisp herb falafel patties served inside a warm fluffy pita pocket with drizzled sesame tahini, pickled purple cabbage, heirloom cucumbers, and fresh mint on clean slate tabletop in natural bright indoor lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdBfY7Ej7Hw9nnFnJRUg6cwranSPY4672sn0uNKZoHUI6JpOM1chML3XgZ82lD3lRLfC_72kGuzYjSivtymJgBbAdiHGz8TSRK2cVJHRWRRS9q0J4cAsQwNbPI8pWFv9zrUpFBTuqTOSY-yPAGGhhYEuxfA8SSZ4_BYXFzcTGthApZdc3vw9Y-xx0wylOfbQilxtmZXAucOmKSc0K5pP_ahzUwt2DPUaxRpCTTY_tyR6yzkibjp5kWvg"/>
+<div class="absolute top-3 left-3 flex gap-1.5">
+<span class="px-2 py-0.5 rounded-full bg-tertiary/90 backdrop-blur-md text-on-tertiary text-label-sm font-label-sm flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-xs" data-icon="spa" data-weight="fill" style="font-variation-settings: 'FILL' 1;">spa</span> 100% Vegan
+            </span>
+</div>
+<div class="absolute top-3 right-3">
+<span class="px-2.5 py-0.5 rounded-full bg-inverse-surface/85 backdrop-blur-md text-inverse-on-surface text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-tertiary-fixed" data-icon="timer">timer</span> 6-8 mins
+            </span>
+</div>
+</div>
+<div class="p-4 flex flex-col justify-between flex-1">
+<div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant mb-1">
+<span class="font-semibold text-secondary">Stall 02 • Mediterranean Press</span>
+<span class="flex items-center gap-1 text-on-surface">
+<span class="material-symbols-outlined text-secondary-container text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span> 4.8 (98)
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface leading-tight">Crisp Falafel &amp; Beetroot Hummus Pocket</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant line-clamp-2 mt-1">House-ground chickpeas, roasted beetroot hummus, sumac pickled onions, and garlic tahini in fresh baked sourdough pita.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between">
+<div>
+<span class="text-headline-md font-headline-md text-primary">$6.25</span>
+<span class="text-body-sm font-body-sm text-outline ml-1">420 kcal</span>
+</div>
+<!-- Single Add CTA Button -->
+<button class="flex items-center space-x-1.5 px-4 py-2 bg-primary hover:bg-primary-container text-on-primary rounded-xl text-label-md font-label-md transition-transform active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-base" data-icon="add">add</span>
+<span>Add</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 3: Student Energizer Smoothie -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden card-shadow border border-outline-variant/30 flex flex-col">
+<div class="relative w-full h-44 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Chilled layered tropical smoothie in a condensation droplet clear glass cup with vibrant orange mango and pink dragonfruit puree garnished with fresh mint leaf on a clean modern wood cafe table." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqLj0EmlhfH6Y-FuNAXhN6KlSAEuG5fs1vBdKIaW1fHr3DRTn_BFsStprY1s7Kb-SxkB1wSJH8pKpqylHpYR_AMSxq8wC1X-GS0MMYNtc5JNR8KDbxWXEKMaTC-1tRj4S37-w6r7-418H6bc414Dpj6ZXabGovVZtmCCZCzOAvB2_N2vef8KgdXedUpShY1qiKhsr8hBSKM3hd44cyfuRNP6Tw_VMvsytXpQ9AMJEaINsLCCNqT3s0BQ"/>
+<div class="absolute top-3 left-3">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface text-label-sm font-label-sm flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-xs text-secondary-container" data-icon="bolt">bolt</span> Quick Grab
+            </span>
+</div>
+<div class="absolute top-3 right-3">
+<span class="px-2.5 py-0.5 rounded-full bg-inverse-surface/85 backdrop-blur-md text-inverse-on-surface text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary-fixed" data-icon="schedule">schedule</span> 3 mins
+            </span>
+</div>
+</div>
+<div class="p-4 flex flex-col justify-between flex-1">
+<div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant mb-1">
+<span class="font-semibold text-secondary">Stall 08 • Orchard &amp; Chai</span>
+<span class="flex items-center gap-1 text-on-surface">
+<span class="material-symbols-outlined text-secondary-container text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (210)
+              </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface leading-tight">Mango Dragonfruit Brain-Boost Smoothie</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant line-clamp-2 mt-1">Alphonso mango pulp, pitaya swirl, chia seed soak, coconut milk, and organic matcha boost.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between">
+<div>
+<span class="text-headline-md font-headline-md text-primary">$4.50</span>
+<span class="text-body-sm font-body-sm text-outline ml-1">210 kcal</span>
+</div>
+<button class="flex items-center space-x-1.5 px-4 py-2 bg-primary hover:bg-primary-container text-on-primary rounded-xl text-label-md font-label-md transition-transform active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-base" data-icon="add">add</span>
+<span>Add</span>
+</button>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- Persistent Floating Cart Bar (Contextual Elevation Level 3) -->
+<div class="fixed bottom-16 left-0 right-0 z-40 px-4 max-w-md mx-auto pointer-events-none">
+<div class="pointer-events-auto bg-inverse-surface text-inverse-on-surface rounded-2xl p-3 tray-shadow flex items-center justify-between transition-transform transform active:scale-98">
+<div class="flex items-center space-x-3">
+<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-on-primary shadow-sm">
+<span class="material-symbols-outlined text-xl" data-icon="shopping_bag">shopping_bag</span>
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm flex items-center justify-center font-bold">2</span>
+</div>
+<div>
+<p class="text-label-md font-label-md font-bold text-inverse-on-surface">2 items in tray</p>
+<p class="text-body-sm font-body-sm text-surface-variant">Stall 04 &amp; Stall 08</p>
+</div>
+</div>
+<button class="flex items-center space-x-2 bg-primary hover:bg-primary-container text-on-primary px-4 py-2 rounded-xl text-label-md font-label-md font-bold transition-all active:scale-95 shadow-sm">
+<span>$14.50</span>
+<span class="w-1 h-1 rounded-full bg-on-primary/60"></span>
+<span>View Order</span>
+<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- BottomNavBar (Shared Component Implementation) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 border-t border-outline-variant/30 dark:border-outline/20 bg-surface-container-lowest dark:bg-inverse-surface shadow-md dark:shadow-none max-w-md left-1/2 -translate-x-1/2">
+<!-- Tab 1: Menu (Active Destination) -->
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl px-3 py-1.5 transition-all" href="#menu">
+<span class="material-symbols-outlined text-xl" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-label-sm font-label-sm mt-0.5">Menu</span>
+</a>
+<!-- Tab 2: Cart -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container-low dark:hover:bg-surface-container hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#cart">
+<span class="material-symbols-outlined text-xl" data-icon="shopping_bag">shopping_bag</span>
+<span class="text-label-sm font-label-sm mt-0.5">Cart</span>
+</a>
+<!-- Tab 3: Orders -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container-low dark:hover:bg-surface-container hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#orders">
+<span class="material-symbols-outlined text-xl" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-sm font-label-sm mt-0.5">Orders</span>
+</a>
+<!-- Tab 4: Kitchen -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container-low dark:hover:bg-surface-container hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#kitchen">
+<span class="material-symbols-outlined text-xl" data-icon="soup_kitchen">soup_kitchen</span>
+<span class="text-label-sm font-label-sm mt-0.5">Kitchen</span>
+</a>
+</nav>
+</body></html>

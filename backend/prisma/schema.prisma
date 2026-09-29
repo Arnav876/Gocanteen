@@ -1,0 +1,161 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+enum OrderStatus {
+  RECEIVED
+  PREPPING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum PickupPreference {
+  ASAP
+  CLASS_BREAK
+}
+
+enum PaymentMethod {
+  MEAL_CARD
+  WALLET
+  CARD
+  UPI_QR
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  passwordHash    String
+  fullName        String
+  role            Role           @default(CUSTOMER)
+  studentStaffId  String?
+  phoneNumber     String?
+  mealCardBalance Decimal        @default(50.00) @db.Decimal(10, 2)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  orders          Order[]        @relation("CustomerOrders")
+  canteen         Canteen?
+}
+
+model CampusLocation {
+  id             String         @id @default(uuid())
+  name           String
+  hallName       String
+  hallPin        String
+  crowdStatus    String         @default("Normal crowd")
+  avgPrepTimeMin Int            @default(10)
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+
+  canteens       Canteen[]
+}
+
+model Canteen {
+  id            String         @id @default(uuid())
+  name          String
+  counterNumber String
+  locationId    String
+  location      CampusLocation @relation(fields: [locationId], references: [id])
+  ownerId       String         @unique
+  owner         User           @relation(fields: [ownerId], references: [id])
+  isOpen        Boolean        @default(true)
+  prepBufferMin Int            @default(0)
+  rating        Decimal        @default(4.8) @db.Decimal(2, 1)
+  reviewCount   Int            @default(0)
+  createdAt     DateTime       @default(now())
+
+  categories    Category[]
+  menuItems     MenuItem[]
+  orders        Order[]
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  canteenId String
+  canteen   Canteen    @relation(fields: [canteenId], references: [id])
+  name      String
+  sortOrder Int        @default(0)
+  menuItems MenuItem[]
+}
+
+model MenuItem {
+  id                  String      @id @default(uuid())
+  canteenId           String
+  canteen             Canteen     @relation(fields: [canteenId], references: [id])
+  categoryId          String
+  category            Category    @relation(fields: [categoryId], references: [id])
+  name                String
+  description         String
+  price               Decimal     @db.Decimal(10, 2)
+  calories            Int?
+  imageUrl            String?
+  prepTimeMin         Int         @default(10)
+  prepTimeMax         Int         @default(12)
+  isVeg               Boolean     @default(false)
+  isVegan             Boolean     @default(false)
+  isHalal             Boolean     @default(false)
+  isGlutenFree        Boolean     @default(false)
+  isAvailable         Boolean     @default(true)
+  stockCount          Int?
+  customizationHint   String?
+  createdAt           DateTime    @default(now())
+
+  orderItems          OrderItem[]
+}
+
+model Order {
+  id               String           @id @default(uuid())
+  orderNumber      String           @unique
+  customerId       String
+  customer         User             @relation("CustomerOrders", fields: [customerId], references: [id])
+  canteenId        String
+  canteen          Canteen          @relation(fields: [canteenId], references: [id])
+  status           OrderStatus      @default(RECEIVED)
+  pickupPreference PickupPreference @default(ASAP)
+  scheduledReadyAt DateTime?
+  diningType       String           @default("Takeaway")
+  shelveCubby      String?
+  
+  subtotal         Decimal          @db.Decimal(10, 2)
+  discount         Decimal          @default(0.00) @db.Decimal(10, 2)
+  feeAndTax        Decimal          @default(0.00) @db.Decimal(10, 2)
+  totalAmount      Decimal          @db.Decimal(10, 2)
+
+  paymentMethod    PaymentMethod    @default(MEAL_CARD)
+  paymentStatus    PaymentStatus    @default(PENDING)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  items            OrderItem[]
+}
+
+model OrderItem {
+  id                  String   @id @default(uuid())
+  orderId             String
+  order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId          String
+  menuItem            MenuItem @relation(fields: [menuItemId], references: [id])
+  itemName            String
+  quantity            Int      @default(1)
+  unitPrice           Decimal  @db.Decimal(10, 2)
+  specialInstructions String?
+}

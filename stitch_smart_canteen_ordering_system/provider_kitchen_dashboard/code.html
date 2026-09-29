@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CampusBites - Kitchen Order Management</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Plus Jakarta Sans Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#283044",
+            "surface-container-low": "#f2f3ff",
+            "inverse-on-surface": "#eef0ff",
+            "primary": "#a33900",
+            "secondary-container": "#fea619",
+            "secondary-fixed-dim": "#ffb95f",
+            "primary-fixed-dim": "#ffb599",
+            "on-primary-fixed": "#370e00",
+            "on-tertiary-container": "#f5fff6",
+            "surface-bright": "#faf8ff",
+            "surface-variant": "#dae2fd",
+            "tertiary-container": "#00855b",
+            "on-background": "#131b2e",
+            "outline": "#8e7166",
+            "surface-container-highest": "#dae2fd",
+            "on-primary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "on-secondary-fixed": "#2a1700",
+            "outline-variant": "#e2bfb2",
+            "inverse-primary": "#ffb599",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#684000",
+            "primary-fixed": "#ffdbce",
+            "surface": "#faf8ff",
+            "error-container": "#ffdad6",
+            "on-surface": "#131b2e",
+            "on-primary-fixed-variant": "#7f2b00",
+            "surface-container-high": "#e2e7ff",
+            "error": "#ba1a1a",
+            "tertiary-fixed": "#6ffbbe",
+            "background": "#faf8ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "surface-tint": "#a73a00",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-error-container": "#93000a",
+            "primary-container": "#cc4900",
+            "on-secondary-fixed-variant": "#653e00",
+            "on-tertiary-fixed": "#002113",
+            "surface-container": "#eaedff",
+            "tertiary": "#006947",
+            "secondary": "#855300",
+            "on-primary-container": "#fffbff",
+            "on-surface-variant": "#5a4138",
+            "secondary-fixed": "#ffddb8",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-lg": "3rem",
+            "gutter-md": "1.5rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-xl": "2rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "margin-md": "1.5rem",
+            "gutter-lg": "2rem"
+          },
+          "fontFamily": {
+            "label-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-28 antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Shell (Shared Component: TopAppBar) -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-4 py-3 max-w-7xl mx-auto bg-surface dark:bg-inverse-surface shadow-sm dark:shadow-none">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<span class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">CampusBites</span>
+<span class="hidden sm:inline-block ml-2 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-label-sm font-label-sm">KDS v2.4</span>
+</div>
+</div>
+<!-- Stall & Live Status Indicators -->
+<div class="flex items-center gap-2 sm:gap-4">
+<div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant/30 text-on-surface">
+<span class="material-symbols-outlined text-primary text-base" data-icon="location_on">location_on</span>
+<span class="text-label-md font-label-md font-bold text-on-surface">The Wok &amp; Grill - Counter 03</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/40 rounded-full px-3 py-1 shadow-sm">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+</span>
+<span class="text-label-md font-label-md font-bold text-on-surface hidden xs:inline">Kitchen Open (Accepting Orders)</span>
+<span class="text-label-md font-label-md font-bold text-on-surface xs:hidden">Open</span>
+</div>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container hover:opacity-90 active:scale-95 transition-transform text-label-md font-label-md shadow-sm" id="audio-toggle-btn">
+<span class="material-symbols-outlined text-base" data-icon="notifications_active" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="hidden sm:inline font-bold">Audio Chime ON</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 space-y-6">
+<!-- Secondary Mobile Location Bar (Visible on Mobile only) -->
+<div class="md:hidden flex items-center justify-between p-3 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="storefront">storefront</span>
+<span class="text-label-md font-label-md font-bold text-on-surface">The Wok &amp; Grill - Counter 03</span>
+</div>
+<span class="text-label-sm font-label-sm text-tertiary bg-surface-container-low px-2 py-0.5 rounded-md font-bold">North Wing Dining</span>
+</div>
+<!-- Live Operational Metric Pills Grid (Bento Style) -->
+<section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40 shadow-sm flex items-center justify-between relative overflow-hidden">
+<div class="space-y-1">
+<p class="text-label-sm font-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Live Queue</p>
+<p class="text-headline-lg font-headline-lg text-primary tracking-tight font-extrabold">28 Active Orders</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">4 awaiting chef intake</p>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined text-2xl" data-icon="receipt_long">receipt_long</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40 shadow-sm flex items-center justify-between relative overflow-hidden">
+<div class="space-y-1">
+<p class="text-label-sm font-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Kitchen Pace</p>
+<p class="text-headline-lg font-headline-lg text-tertiary tracking-tight font-extrabold">Avg Prep: 9m</p>
+<p class="text-body-sm font-body-sm text-tertiary font-bold">⚡ 2m faster than rush benchmark</p>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-2xl" data-icon="timer">timer</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/40 shadow-sm flex items-center justify-between relative overflow-hidden">
+<div class="space-y-1">
+<p class="text-label-sm font-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Shift Revenue</p>
+<p class="text-headline-lg font-headline-lg text-on-surface tracking-tight font-extrabold">Today: $842.50</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">118 meals processed today</p>
+</div>
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-2xl" data-icon="payments">payments</span>
+</div>
+</div>
+</section>
+<!-- Workflow Segmentation Tabs with Badge Counters -->
+<section class="border-b border-outline-variant/30 pb-1">
+<div class="flex space-x-2 sm:space-x-3 overflow-x-auto no-scrollbar py-1">
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary text-label-lg font-label-lg shadow-sm whitespace-nowrap active:scale-95 transition-all">
+<span>New Orders</span>
+<span class="bg-on-primary text-primary px-2 py-0.5 rounded-full text-label-sm font-label-sm font-extrabold">4</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface border border-outline-variant/30 text-label-lg font-label-lg whitespace-nowrap active:scale-95 transition-all">
+<span>In Preparation</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-label-sm font-label-sm font-extrabold">6</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface border border-outline-variant/30 text-label-lg font-label-lg whitespace-nowrap active:scale-95 transition-all">
+<span>Ready for Pickup</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full text-label-sm font-label-sm font-extrabold">3</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant border border-outline-variant/30 text-label-lg font-label-lg whitespace-nowrap active:scale-95 transition-all">
+<span>Completed</span>
+<span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full text-label-sm font-label-sm font-extrabold">42</span>
+</button>
+</div>
+</section>
+<!-- Order Ticket Grid / Workstations Canvas -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- ORDER CARD 1: URGENT / NEW -->
+<article class="bg-surface-container-lowest rounded-xl border-l-4 border-l-primary border border-outline-variant/40 shadow-sm flex flex-col justify-between overflow-hidden">
+<div>
+<!-- Header Bar -->
+<div class="p-4 bg-surface-container-low/40 flex justify-between items-start border-b border-outline-variant/20">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-extrabold text-primary">#CB-104</span>
+<span class="px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant text-label-sm font-label-sm uppercase font-bold">New</span>
+</div>
+<p class="text-body-md font-body-md font-bold text-on-surface mt-0.5">Alex R. <span class="text-on-surface-variant font-normal">- Student ID ***482</span></p>
+</div>
+<div class="text-right">
+<div class="inline-flex items-center gap-1 text-primary text-label-sm font-label-sm font-bold bg-error-container text-on-error-container px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span>Received 3 mins ago</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Dine-in (Tray 12)</p>
+</div>
+</div>
+<!-- Items Checklist -->
+<div class="p-4 space-y-3">
+<div class="flex items-start justify-between border-b border-outline-variant/15 pb-2.5">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-primary-container text-on-primary-container text-label-sm font-label-sm flex items-center justify-center font-bold">1</span>
+<p class="text-body-lg font-body-lg font-bold text-on-surface">Signature Spicy Szechuan Wok Bowl</p>
+</div>
+<div class="ml-7 p-2 rounded-lg bg-surface-container-high border border-outline-variant/40">
+<p class="text-label-sm font-label-sm font-bold text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
+                    Special Instructions:
+                  </p>
+<p class="text-body-sm font-body-sm text-on-surface font-bold">Extra chili sauce, No onions, Sub Jasmine Rice</p>
+</div>
+</div>
+<span class="text-body-md font-body-md font-bold text-on-surface">$12.40</span>
+</div>
+<div class="flex items-start justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-primary-container text-on-primary-container text-label-sm font-label-sm flex items-center justify-center font-bold">1</span>
+<p class="text-body-lg font-body-lg font-bold text-on-surface">Crispy Vegetable Gyoza (4 pcs)</p>
+</div>
+<span class="text-body-md font-body-md font-bold text-on-surface">$4.50</span>
+</div>
+</div>
+</div>
+<!-- Ticket Footer & Action Controls -->
+<div class="p-4 bg-surface-bright border-t border-outline-variant/20 space-y-2">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+<span>2 Items • Prepaid Campus Card</span>
+<span class="font-bold text-on-surface">$16.90</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="w-full py-2.5 px-3 rounded-xl bg-primary text-on-primary text-label-md font-label-md font-bold hover:bg-primary-container active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-base" data-icon="soup_kitchen">soup_kitchen</span>
+<span>Start Cooking</span>
+</button>
+<button class="w-full py-2.5 px-3 rounded-xl bg-surface-container-high text-on-surface text-label-md font-label-md font-bold hover:bg-surface-variant active:scale-95 transition-transform flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-base" data-icon="sms">sms</span>
+<span>Notify Customer via Push/SMS</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ORDER CARD 2: IN PREPARATION -->
+<article class="bg-surface-container-lowest rounded-xl border-l-4 border-l-secondary-container border border-outline-variant/40 shadow-sm flex flex-col justify-between overflow-hidden">
+<div>
+<!-- Header Bar -->
+<div class="p-4 bg-surface-container-low/40 flex justify-between items-start border-b border-outline-variant/20">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-extrabold text-on-surface">#CB-102</span>
+<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed text-label-sm font-label-sm uppercase font-bold">Prepping</span>
+</div>
+<p class="text-body-md font-body-md font-bold text-on-surface mt-0.5">Maya K. <span class="text-on-surface-variant font-normal">- Student ID ***119</span></p>
+</div>
+<div class="text-right">
+<div class="inline-flex items-center gap-1 text-on-secondary-container text-label-sm font-label-sm font-bold bg-secondary-fixed px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-sm" data-icon="timelapse">timelapse</span>
+<span>Prepping: 6 mins</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Takeaway (Eco Box)</p>
+</div>
+</div>
+<!-- Items Checklist -->
+<div class="p-4 space-y-3">
+<div class="flex items-start justify-between border-b border-outline-variant/15 pb-2.5">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-label-sm font-label-sm flex items-center justify-center font-bold">2</span>
+<p class="text-body-lg font-body-lg font-bold text-on-surface">Teriyaki Chicken Donburi</p>
+</div>
+<div class="ml-7 p-2 rounded-lg bg-surface-container-high border border-outline-variant/40">
+<p class="text-label-sm font-label-sm font-bold text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+                    Special Instructions:
+                  </p>
+<p class="text-body-sm font-body-sm text-on-surface font-bold">Sauce on the side, Add extra pickled ginger</p>
+</div>
+</div>
+<span class="text-body-md font-body-md font-bold text-on-surface">$23.00</span>
+</div>
+<div class="flex items-start justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-label-sm font-label-sm flex items-center justify-center font-bold">2</span>
+<p class="text-body-lg font-body-lg font-bold text-on-surface">Iced Roasted Oolong Tea</p>
+</div>
+<span class="text-body-md font-body-md font-bold text-on-surface">$6.00</span>
+</div>
+</div>
+</div>
+<!-- Ticket Footer & Action Controls -->
+<div class="p-4 bg-surface-bright border-t border-outline-variant/20 space-y-2">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+<span>4 Items • Mobile Express Pay</span>
+<span class="font-bold text-on-surface">$29.00</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="w-full py-2.5 px-3 rounded-xl bg-tertiary text-on-tertiary text-label-md font-label-md font-bold hover:opacity-90 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+<span>Mark Ready for Pickup</span>
+</button>
+<button class="w-full py-2.5 px-3 rounded-xl bg-surface-container-high text-on-surface text-label-md font-label-md font-bold hover:bg-surface-variant active:scale-95 transition-transform flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-base" data-icon="sms">sms</span>
+<span>Notify Customer via Push/SMS</span>
+</button>
+</div>
+</div>
+</article>
+<!-- ORDER CARD 3: READY FOR PICKUP -->
+<article class="bg-surface-container-lowest rounded-xl border-l-4 border-l-tertiary-container border border-outline-variant/40 shadow-sm flex flex-col justify-between overflow-hidden">
+<div>
+<!-- Header Bar -->
+<div class="p-4 bg-surface-container-low/40 flex justify-between items-start border-b border-outline-variant/20">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-extrabold text-tertiary">#CB-099</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed text-label-sm font-label-sm uppercase font-bold">Ready</span>
+</div>
+<p class="text-body-md font-body-md font-bold text-on-surface mt-0.5">Prof. David Chen <span class="text-on-surface-variant font-normal">- Faculty ID ***903</span></p>
+</div>
+<div class="text-right">
+<div class="inline-flex items-center gap-1 text-tertiary text-label-sm font-label-sm font-bold bg-surface-container-high px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-sm" data-icon="notifications">notifications</span>
+<span>Waiting 4m at counter</span>
+</div>
+<p class="text-body-sm font-body-sm text-tertiary font-bold mt-1">Shelve Cubby #04</p>
+</div>
+</div>
+<!-- Items Checklist -->
+<div class="p-4 space-y-3">
+<div class="flex items-start justify-between border-b border-outline-variant/15 pb-2.5">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-label-sm font-label-sm flex items-center justify-center font-bold">1</span>
+<p class="text-body-lg font-body-lg font-bold text-on-surface">Stir-Fried Black Pepper Beef Udon</p>
+</div>
+<div class="ml-7 text-label-sm font-label-sm text-on-surface-variant">
+                  Standard spice level, Extra green onions
+                </div>
+</div>
+<span class="text-body-md font-body-md font-bold text-on-surface">$13.80</span>
+</div>
+<div class="flex items-start justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-label-sm font-label-sm flex items-center justify-center font-bold">1</span>
+<p class="text-body-lg font-body-lg font-bold text-on-surface">Steamed Edamame with Sea Salt</p>
+</div>
+<span class="text-body-md font-body-md font-bold text-on-surface">$3.50</span>
+</div>
+</div>
+</div>
+<!-- Ticket Footer & Action Controls -->
+<div class="p-4 bg-surface-bright border-t border-outline-variant/20 space-y-2">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+<span>2 Items • Department Bill</span>
+<span class="font-bold text-on-surface">$17.30</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="w-full py-2.5 px-3 rounded-xl bg-inverse-surface text-inverse-on-surface text-label-md font-label-md font-bold hover:opacity-90 active:scale-95 transition-transform flex items-center justify-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-base" data-icon="done_all">done_all</span>
+<span>Handed Over</span>
+</button>
+<button class="w-full py-2.5 px-3 rounded-xl bg-secondary-container text-on-secondary-container text-label-md font-label-md font-bold hover:opacity-90 active:scale-95 transition-transform flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-base" data-icon="ring_volume">ring_volume</span>
+<span>Notify Customer via Push/SMS</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- Quick Station Operations Bento Section -->
+<section class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/40 shadow-sm mt-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/20">
+<div>
+<h2 class="text-headline-sm font-headline-sm font-bold text-on-surface">Kitchen Station Live Operations</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Quick toggle 86-list, throttle high queue times, or adjust counter assignments.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-label-md font-label-md font-bold flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="tune">tune</span>
+<span>Prep Buffer (+5m)</span>
+</button>
+<button class="px-3.5 py-2 rounded-xl bg-error-container text-on-error-container hover:opacity-90 text-label-md font-label-md font-bold flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="pause_circle">pause_circle</span>
+<span>Pause Incoming</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
+<div class="p-3 bg-surface rounded-xl border border-outline-variant/30 flex items-center justify-between">
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Chili Oil Beef</p>
+<p class="text-label-sm font-label-sm text-tertiary">14 portions left</p>
+</div>
+<span class="material-symbols-outlined text-tertiary" data-icon="check_circle">check_circle</span>
+</div>
+<div class="p-3 bg-surface rounded-xl border border-outline-variant/30 flex items-center justify-between">
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Udon Noodles</p>
+<p class="text-label-sm font-label-sm text-tertiary">Stock normal</p>
+</div>
+<span class="material-symbols-outlined text-tertiary" data-icon="check_circle">check_circle</span>
+</div>
+<div class="p-3 bg-surface rounded-xl border border-outline-variant/30 flex items-center justify-between">
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Fried Dumplings</p>
+<p class="text-label-sm font-label-sm text-secondary">Low (3 left)</p>
+</div>
+<span class="material-symbols-outlined text-secondary" data-icon="warning">warning</span>
+</div>
+<div class="p-3 bg-surface rounded-xl border border-outline-variant/30 flex items-center justify-between opacity-60">
+<div>
+<p class="text-body-md font-body-md font-bold text-on-surface">Spring Rolls</p>
+<p class="text-label-sm font-label-sm text-error">86'd (Sold Out)</p>
+</div>
+<span class="material-symbols-outlined text-error" data-icon="block">block</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual Floating Action Button (FAB) -->
+<aside class="fixed bottom-20 right-4 sm:right-8 z-40">
+<button aria-label="Manage Kitchen and Items" class="flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-4 py-3.5 rounded-full shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="edit_note" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="text-label-lg font-label-lg font-bold pr-1">Manage Stall</span>
+</button>
+</aside>
+<!-- Bottom Navigation Shell (Shared Component: BottomNavBar) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 border-t border-outline-variant/30 dark:border-outline/20 bg-surface-container-lowest dark:bg-inverse-surface shadow-md dark:shadow-none">
+<!-- Item 1: Menu -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container-low dark:hover:bg-surface-container hover:text-primary dark:hover:text-inverse-primary transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-label-sm font-label-sm mt-0.5">Menu</span>
+</button>
+<!-- Item 2: Cart -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container-low dark:hover:bg-surface-container hover:text-primary dark:hover:text-inverse-primary transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="text-label-sm font-label-sm mt-0.5">Cart</span>
+</button>
+<!-- Item 3: Orders -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container-low dark:hover:bg-surface-container hover:text-primary dark:hover:text-inverse-primary transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-sm font-label-sm mt-0.5">Orders</span>
+</button>
+<!-- Item 4: Kitchen (ACTIVE DESTINATION) -->
+<button class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-xl px-3 py-1.5 transition-all active:scale-95 duration-150 shadow-sm">
+<span class="material-symbols-outlined" data-icon="soup_kitchen" style="font-variation-settings: 'FILL' 1;">soup_kitchen</span>
+<span class="text-label-sm font-label-sm mt-0.5">Kitchen</span>
+</button>
+</nav>
+<!-- Interactive Micro-Interactions Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Audio Chime Toggle
+      const chimeBtn = document.getElementById('audio-toggle-btn');
+      let chimeActive = true;
+
+      chimeBtn.addEventListener('click', () => {
+        chimeActive = !chimeActive;
+        const textSpan = chimeBtn.querySelector('span:not(.material-symbols-outlined)');
+        const iconSpan = chimeBtn.querySelector('.material-symbols-outlined');
+        
+        if (chimeActive) {
+          textSpan.textContent = 'Audio Chime ON';
+          iconSpan.textContent = 'notifications_active';
+          chimeBtn.classList.remove('bg-surface-container-high', 'text-on-surface');
+          chimeBtn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+        } else {
+          textSpan.textContent = 'Audio Chime Muted';
+          iconSpan.textContent = 'notifications_off';
+          chimeBtn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+          chimeBtn.classList.add('bg-surface-container-high', 'text-on-surface');
+        }
+      });
+    });
+  </script>
+</body></html>
