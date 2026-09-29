@@ -1,103 +1,95 @@
 export type Role = 'CUSTOMER' | 'PROVIDER' | 'ADMIN';
 
+export interface Location {
+  id: string;
+  name: string;
+  code?: string | null;
+  description?: string | null;
+  hallName?: string | null;
+  crowdStatus: string;
+  avgPrepTimeMin: number;
+  isActive: boolean;
+  providers?: ProviderInfo[];
+}
+
+export interface ProviderInfo {
+  id: string;
+  name: string;
+  status: 'PENDING' | 'APPROVED' | 'SUSPENDED';
+  counterNumber?: string | null;
+  locationId: string;
+  isOpen: boolean;
+  rating?: number;
+  reviewCount?: number;
+  location?: Location;
+}
+
 export interface User {
   id: string;
   email: string;
   fullName: string;
   role: Role;
-  studentStaffId?: string;
-  phoneNumber?: string;
-  mealCardBalance: number;
+  phoneNumber?: string | null;
+  preferredLocationId?: string | null;
+  preferredLocation?: Location | null;
+  provider?: ProviderInfo | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface CampusLocation {
+export interface AuthResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    user: User;
+    token: string;
+  };
+}
+
+export interface Category {
   id: string;
   name: string;
-  hallName: string;
-  hallPin: string;
-  crowdStatus: 'Normal crowd' | 'Moderate crowd' | 'High crowd';
-  avgPrepTimeMin: number;
-  isOpen: boolean;
-  isFastLane?: boolean;
+  description?: string | null;
+  icon?: string | null;
+  sortOrder: number;
+  isActive: boolean;
 }
 
-export interface Canteen {
+export interface FoodItem {
   id: string;
-  name: string;
-  counterNumber: string;
-  locationId: string;
-  locationName: string;
-  isOpen: boolean;
-  prepBufferMin: number;
-  rating: number;
-  reviewCount: number;
-}
-
-export interface MenuItem {
-  id: string;
-  canteenId: string;
+  providerId: string;
   categoryId: string;
-  categoryName: string;
-  stallName: string;
-  rating: number;
-  reviewCount: number;
   name: string;
-  description: string;
-  price: number;
-  calories?: number;
-  imageUrl: string;
+  description?: string | null;
+  price: number | string;
+  imageUrl?: string | null;
+  availability: 'AVAILABLE' | 'UNAVAILABLE';
+  isVeg: boolean;
+  isVegan: boolean;
+  isHalal: boolean;
+  isGlutenFree: boolean;
+  calories?: number | null;
   prepTimeMin: number;
   prepTimeMax: number;
-  isVeg?: boolean;
-  isVegan?: boolean;
-  isHalal?: boolean;
-  isGlutenFree?: boolean;
-  isQuickGrab?: boolean;
-  isAvailable: boolean;
-  stockCount?: number;
-  customizationHint?: string;
+  category?: Category;
+  provider?: ProviderInfo;
 }
 
-export type OrderStatus = 'RECEIVED' | 'PREPPING' | 'READY' | 'COMPLETED' | 'CANCELLED';
-
-export type PickupPreference = 'asap' | 'break';
-
-export type PaymentMethodType = 'meal_card' | 'wallet' | 'card' | 'qr';
+export type OrderStatus = 'PLACED' | 'ACCEPTED' | 'PREPARING' | 'READY' | 'COMPLETED' | 'REJECTED' | 'CANCELLED';
 
 export interface CartItem {
-  menuItem: MenuItem;
+  foodItem: FoodItem;
   quantity: number;
   specialInstructions?: string;
 }
 
-export interface OrderItem {
+export interface NotificationItem {
   id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  specialInstructions?: string;
-  ecoContainer?: boolean;
-}
-
-export interface Order {
-  id: string;
-  orderNumber: string; // e.g. "#CB-104"
-  customerName: string;
-  studentStaffId: string;
-  canteenName: string;
-  counterName: string;
-  diningType: 'Dine-in' | 'Takeaway';
-  trayNumber?: string;
-  shelveCubby?: string;
-  status: OrderStatus;
-  pickupPreference: PickupPreference;
-  estimatedReadyTime: string;
-  receivedAt: string;
-  items: OrderItem[];
-  subtotal: number;
-  discount: number;
-  feeAndTax: number;
-  totalAmount: number;
-  paymentMethod: PaymentMethodType;
-  paymentLabel: string;
+  userId: string;
+  orderId?: string | null;
+  title: string;
+  message: string;
+  isRead: boolean;
+  type: string;
+  createdAt: string;
 }
