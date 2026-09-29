@@ -9,7 +9,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO with CORS
 export const io = new SocketIOServer(server, {
   cors: {
-    origin: ENV.CORS_ORIGIN,
+    origin: [ENV.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   },
 });
@@ -17,10 +17,10 @@ export const io = new SocketIOServer(server, {
 io.on('connection', (socket) => {
   console.log(`[Socket.IO] Client connected: ${socket.id}`);
 
-  // Join canteen room (for provider KDS)
-  socket.on('join:canteen', (canteenId: string) => {
-    socket.join(`canteen:${canteenId}`);
-    console.log(`[Socket.IO] ${socket.id} joined canteen:${canteenId}`);
+  // Join provider room (for provider incoming orders/updates)
+  socket.on('join:provider', (providerId: string) => {
+    socket.join(`provider:${providerId}`);
+    console.log(`[Socket.IO] ${socket.id} joined provider:${providerId}`);
   });
 
   // Join private order room (for customer order status updates)
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
 
 server.listen(ENV.PORT, () => {
   console.log(`===============================================`);
-  console.log(`🚀 CampusBites API Server running on port ${ENV.PORT}`);
+  console.log(`🚀 Gocanteen / CampusBites API Server running on port ${ENV.PORT}`);
   console.log(`📡 Socket.IO Real-Time Gateway ready`);
   console.log(`🌱 Environment: ${ENV.NODE_ENV}`);
   console.log(`===============================================`);

@@ -6,9 +6,28 @@ export default function App() {
 
   useEffect(() => {
     // Health check ping to Express server
-    fetch('http://localhost:5000/api/health')
-      .then((res) => (res.ok ? setServerStatus('online') : setServerStatus('offline')))
-      .catch(() => setServerStatus('offline'));
+    const checkHealth = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+        const res = await fetch(`${apiUrl}/api/health`);
+        if (res.ok) {
+          setServerStatus('online');
+          return;
+        }
+      } catch {
+        try {
+          const fallbackRes = await fetch('http://localhost:5000/api/health');
+          if (fallbackRes.ok) {
+            setServerStatus('online');
+            return;
+          }
+        } catch {
+          // offline
+        }
+      }
+      setServerStatus('offline');
+    };
+    checkHealth();
   }, []);
 
   return (

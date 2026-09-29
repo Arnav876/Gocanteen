@@ -1,34 +1,43 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import { ENV } from './config/env';
+import apiRouter from './routes';
+import { errorHandler } from './middlewares/error.middleware';
 
 export const createApp = (): Application => {
   const app = express();
 
-  app.use(cors({
-    origin: ENV.CORS_ORIGIN,
-    credentials: true,
-  }));
+  // Security headers
+  app.use(helmet());
+
+  // CORS configuration
+  app.use(
+    cors({
+      origin: [ENV.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'],
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+  );
+
+  // Body parsing
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Health check route
+  // Root health check endpoint (as specified in Step 8)
   app.get('/api/health', (_req: Request, res: Response) => {
     res.status(200).json({
       status: 'ok',
-      service: 'CampusBites Backend API',
-      timestamp: new Date().toISOString(),
+      service: 'Gocanteen API',
     });
   });
 
-  // Global error handler
-  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-    console.error('Unhandled error:', err);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: err.message,
-    });
-  });
+  // API router
+  app.use('/api', apiRouter);
+
+  // Centralized error handler
+  app.use(errorHandler);
 
   return app;
 };
