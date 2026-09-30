@@ -76,11 +76,69 @@ export interface FoodItem {
 }
 
 export type OrderStatus = 'PLACED' | 'ACCEPTED' | 'PREPARING' | 'READY' | 'COMPLETED' | 'REJECTED' | 'CANCELLED';
+export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
+
+export interface OrderItem {
+  id: string;
+  orderId: string;
+  foodItemId: string;
+  itemName: string;
+  price: number | string;
+  quantity: number;
+  specialInstructions?: string | null;
+  foodItem?: FoodItem;
+}
+
+export interface Payment {
+  id: string;
+  orderId: string;
+  amount: number | string;
+  status: PaymentStatus;
+  paymentMethod: string;
+  transactionId?: string | null;
+  paidAt?: string | null;
+}
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  customerId: string;
+  customer?: User;
+  providerId: string;
+  provider?: ProviderInfo;
+  locationId: string;
+  location?: Location;
+  status: OrderStatus;
+  pickupPreference: string;
+  diningType: string;
+  scheduledReadyAt?: string | null;
+  subtotal: number | string;
+  tax: number | string;
+  deliveryFee: number | string;
+  discount: number | string;
+  totalAmount: number | string;
+  notes?: string | null;
+  items: OrderItem[];
+  payment?: Payment | null;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface CartItem {
   foodItem: FoodItem;
   quantity: number;
   specialInstructions?: string;
+}
+
+export interface CreateOrderPayload {
+  items: Array<{
+    foodId: string;
+    quantity: number;
+    specialInstructions?: string | null;
+  }>;
+  pickupPreference?: string;
+  diningType?: string;
+  notes?: string | null;
 }
 
 export interface NotificationItem {

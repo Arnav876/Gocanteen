@@ -1,0 +1,1 @@
+we will go with the upi offer where in the upi, while where in the when the item is added, it is redirected to choose the preferred UPI app, and it will redirect to the app and make the payment, and it will then the user will comeback to the main app, where in the user can see payment process and then the order will be given to the provider 

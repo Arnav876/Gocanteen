@@ -1,17 +1,50 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/auth.middleware';
+import { OrderController } from '../controllers/order.controller';
+import { requireAuth, requireRole } from '../middlewares/auth.middleware';
+import { validate } from '../middlewares/validate.middleware';
+import { createOrderSchema, updateOrderStatusSchema } from '../validators/order.validator';
 
 const router = Router();
 
-router.use(requireAuth);
+// Customer: Place an order
+router.post(
+  '/',
+  requireAuth,
+  requireRole('CUSTOMER', 'ADMIN'),
+  validate(createOrderSchema),
+  OrderController.createOrder
+);
 
-// Order endpoints will be implemented in subsequent phase
-router.get('/', (_req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Orders endpoint ready for Phase 3 ordering system implementation',
-    data: [],
-  });
-});
+// Customer: View my orders
+router.get(
+  '/my-orders',
+  requireAuth,
+  requireRole('CUSTOMER', 'ADMIN'),
+  OrderController.getMyOrders
+);
+
+// Provider: View stall incoming orders
+router.get(
+  '/provider',
+  requireAuth,
+  requireRole('PROVIDER', 'ADMIN'),
+  OrderController.getProviderOrders
+);
+
+// Get single order details
+router.get(
+  '/:id',
+  requireAuth,
+  OrderController.getOrderById
+);
+
+// Provider: Update order status
+router.patch(
+  '/:id/status',
+  requireAuth,
+  requireRole('PROVIDER', 'ADMIN'),
+  validate(updateOrderStatusSchema),
+  OrderController.updateOrderStatus
+);
 
 export default router;

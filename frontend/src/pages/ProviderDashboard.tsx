@@ -5,13 +5,14 @@ import { api, parseApiError } from '../lib/api';
 import type { FoodItem, Category } from '../types';
 import type { CreateFoodPayload, UpdateFoodPayload } from '../lib/api';
 import { FoodItemModal } from '../components/provider/FoodItemModal';
+import { ProviderOrdersView } from '../components/provider/ProviderOrdersView';
 
 export const ProviderDashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // State
-  const [activeTab, setActiveTab] = useState<'menu' | 'overview'>('menu');
+  // State: 'orders' | 'menu' | 'overview'
+  const [activeTab, setActiveTab] = useState<'orders' | 'menu' | 'overview'>('orders');
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -257,6 +258,18 @@ export const ProviderDashboard: React.FC = () => {
         <div className="flex items-center justify-between border-b border-outline-variant/30 pb-3 gap-4 flex-wrap">
           <div className="flex space-x-2">
             <button
+              onClick={() => setActiveTab('orders')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-label-lg font-bold transition-all shadow-sm ${
+                activeTab === 'orders'
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-container-lowest text-on-surface hover:bg-surface-container border border-outline-variant/30'
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">receipt_long</span>
+              <span>Incoming Orders (KDS)</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('menu')}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-label-lg font-bold transition-all shadow-sm ${
                 activeTab === 'menu'
@@ -294,6 +307,14 @@ export const ProviderDashboard: React.FC = () => {
             </button>
           )}
         </div>
+
+        {/* Tab 0: Incoming Orders KDS */}
+        {activeTab === 'orders' && (
+          <ProviderOrdersView
+            providerName={user?.provider?.name || user?.fullName || 'Campus Stall'}
+            counterNumber={user?.provider?.counterNumber || 'Counter 01'}
+          />
+        )}
 
         {/* Tab 1: Menu Management */}
         {activeTab === 'menu' && (

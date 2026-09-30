@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosError } from 'axios';
-import type { AuthResponse, Location, Category, FoodItem, User } from '../types';
+import type { AuthResponse, Location, Category, FoodItem, User, Order, OrderStatus, CreateOrderPayload } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL 
   ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
@@ -40,7 +40,7 @@ export const parseApiError = (error: unknown): string => {
       return axiosErr.response.data.message;
     }
     if (axiosErr.response.status === 401) {
-      return 'Invalid email or password.';
+      return 'Invalid email or password / authentication expired.';
     }
     if (axiosErr.response.status === 403) {
       return 'Access forbidden. You do not have permission for this action.';
@@ -158,6 +158,30 @@ export const api = {
     },
     delete: async (id: string): Promise<void> => {
       await apiClient.delete(`/foods/${id}`);
+    },
+  },
+
+  // Orders
+  orders: {
+    create: async (payload: CreateOrderPayload): Promise<Order> => {
+      const res = await apiClient.post<{ success: boolean; data: Order }>('/orders', payload);
+      return res.data.data;
+    },
+    getMyOrders: async (): Promise<Order[]> => {
+      const res = await apiClient.get<{ success: boolean; data: Order[] }>('/orders/my-orders');
+      return res.data.data;
+    },
+    getProviderOrders: async (): Promise<Order[]> => {
+      const res = await apiClient.get<{ success: boolean; data: Order[] }>('/orders/provider');
+      return res.data.data;
+    },
+    getById: async (id: string): Promise<Order> => {
+      const res = await apiClient.get<{ success: boolean; data: Order }>(`/orders/${id}`);
+      return res.data.data;
+    },
+    updateStatus: async (id: string, status: OrderStatus): Promise<Order> => {
+      const res = await apiClient.patch<{ success: boolean; data: Order }>(`/orders/${id}/status`, { status });
+      return res.data.data;
     },
   },
 
