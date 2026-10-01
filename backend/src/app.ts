@@ -21,8 +21,14 @@ export const createApp = (): Application => {
     })
   );
 
-  // Body parsing
-  app.use(express.json());
+  // Body parsing with rawBody preserved for webhook signature verification
+  app.use(
+    express.json({
+      verify: (req: any, _res, buf) => {
+        req.rawBody = buf ? buf.toString('utf8') : '';
+      },
+    })
+  );
   app.use(express.urlencoded({ extended: true }));
 
   // Root health check endpoint (as specified in Step 8)

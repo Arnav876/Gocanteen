@@ -302,6 +302,13 @@ export const ProviderOrdersView: React.FC<ProviderOrdersViewProps> = ({
                         >
                           {order.status}
                         </span>
+
+                        {order.payment?.status === 'PAID' && (
+                          <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-label-sm font-bold border border-emerald-300 flex items-center gap-1">
+                            <span className="material-symbols-outlined text-xs">verified</span>
+                            <span>PAID</span>
+                          </span>
+                        )}
                       </div>
                       <p className="text-body-md font-bold text-on-surface mt-0.5">
                         {order.customer?.fullName || 'Campus Student'}

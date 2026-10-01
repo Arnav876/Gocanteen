@@ -5,6 +5,7 @@ import { LoginPage } from './pages/LoginPage';
 import { CustomerDashboard } from './pages/CustomerDashboard';
 import { ProviderDashboard } from './pages/ProviderDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { PaymentStatusPage } from './pages/PaymentStatusPage';
 import { StitchAuditPage } from './pages/StitchAuditPage';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 
@@ -23,6 +24,24 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']}>
                 <CustomerDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/payment/status"
+            element={
+              <ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']}>
+                <PaymentStatusPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/payment/status/:orderId"
+            element={
+              <ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']}>
+                <PaymentStatusPage />
               </ProtectedRoute>
             }
           />

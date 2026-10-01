@@ -227,7 +227,13 @@ export class OrderController {
       }
 
       const orders = await prisma.order.findMany({
-        where: { providerId: provider.id },
+        where: {
+          providerId: provider.id,
+          // Only show orders with confirmed / successful payments to the kitchen
+          payment: {
+            status: PaymentStatus.PAID,
+          },
+        },
         include: {
           customer: {
             select: {

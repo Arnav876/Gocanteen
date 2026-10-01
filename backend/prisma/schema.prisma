@@ -185,19 +185,25 @@ model OrderItem {
 }
 
 model Payment {
-  id            String        @id @default(uuid())
-  orderId       String        @unique
-  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  amount        Decimal       @db.Decimal(10, 2)
-  status        PaymentStatus @default(PENDING)
-  paymentMethod String        @default("MEAL_CARD")
-  transactionId String?
-  paidAt        DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id                 String        @id @default(uuid())
+  orderId            String        @unique
+  order              Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount             Decimal       @db.Decimal(10, 2)
+  currency           String        @default("INR")
+  status             PaymentStatus @default(PENDING)
+  paymentMethod      String        @default("UPI")
+  gateway            String        @default("CASHFREE")
+  gatewayOrderId     String?
+  gatewayPaymentId   String?
+  cfPaymentSessionId String?
+  transactionId      String?
+  paidAt             DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
   @@index([orderId])
   @@index([status])
+  @@index([gatewayOrderId])
 }
 
 model Notification {

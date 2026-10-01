@@ -1,6 +1,17 @@
 import axios from 'axios';
 import type { AxiosError } from 'axios';
-import type { AuthResponse, Location, Category, FoodItem, User, Order, OrderStatus, CreateOrderPayload } from '../types';
+import type {
+  AuthResponse,
+  Location,
+  Category,
+  FoodItem,
+  User,
+  Order,
+  OrderStatus,
+  CreateOrderPayload,
+  CreatePaymentResponse,
+  PaymentStatusResponse,
+} from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL 
   ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
@@ -191,6 +202,30 @@ export const api = {
       const res = await apiClient.patch<{ success: boolean; data: User }>('/users/preferred-location', {
         locationId,
       });
+      return res.data.data;
+    },
+  },
+
+  // Payments
+  payments: {
+    createOrder: async (payload: CreateOrderPayload): Promise<CreatePaymentResponse> => {
+      const res = await apiClient.post<{ success: boolean; data: CreatePaymentResponse }>(
+        '/payments/create-order',
+        payload
+      );
+      return res.data.data;
+    },
+    getStatus: async (orderId: string): Promise<PaymentStatusResponse> => {
+      const res = await apiClient.get<{ success: boolean; data: PaymentStatusResponse }>(
+        `/payments/${orderId}/status`
+      );
+      return res.data.data;
+    },
+    verify: async (orderId: string): Promise<{ orderId: string; orderNumber: string; status: string; isPaid: boolean }> => {
+      const res = await apiClient.post<{
+        success: boolean;
+        data: { orderId: string; orderNumber: string; status: string; isPaid: boolean };
+      }>('/payments/verify', { orderId });
       return res.data.data;
     },
   },

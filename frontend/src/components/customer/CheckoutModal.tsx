@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { api, parseApiError } from '../../lib/api';
+import { launchCashfreeUPIPayment } from '../../lib/cashfree';
 import type { Order } from '../../types';
 
 interface CheckoutModalProps {
@@ -15,9 +17,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onOrderSuccess,
 }) => {
   const { items, subtotal, clearCart, updateQuantity } = useCart();
+  const navigate = useNavigate();
 
   const [pickupPreference, setPickupPreference] = useState<'asap' | 'break'>('asap');
   const [diningType, setDiningType] = useState<'DINE_IN' | 'TAKEAWAY'>('DINE_IN');
+  const [paymentMethod, setPaymentMethod] = useState<'UPI' | 'MEAL_CARD'>('UPI');
   const [notes, setNotes] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,27 +35,44 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const tax = Number((subtotal * 0.05).toFixed(2));
   const packagingFee = diningType === 'TAKEAWAY' ? 10 : 0;
   const discount = Number((subtotal * 0.1).toFixed(2)); // 10% Campus student perk
-  const finalTotal = Math.max(0, subtotal + tax + packagingFee - discount);
+  const finalTotal = Math.max(1, Number((subtotal + tax + packagingFee - discount).toFixed(2)));
 
-  const handlePlaceOrder = async () => {
+  const handlePlaceOrderAndPay = async () => {
     setIsSubmitting(true);
     setError(null);
 
-    try {
-      const payload = {
-        items: items.map((item) => ({
-          foodId: item.foodItem.id,
-          quantity: item.quantity,
-          specialInstructions: item.specialInstructions || undefined,
-        })),
-        pickupPreference: pickupPreference === 'asap' ? 'Pick up ASAP' : 'Class Break Slot',
-        diningType: diningType === 'DINE_IN' ? 'Dine-in' : 'Takeaway',
-        notes: notes.trim() || undefined,
-      };
+    const payload = {
+      items: items.map((item) => ({
+        foodId: item.foodItem.id,
+        quantity: item.quantity,
+        specialInstructions: item.specialInstructions || undefined,
+      })),
+      pickupPreference: pickupPreference === 'asap' ? 'Pick up ASAP' : 'Class Break Slot',
+      diningType: diningType === 'DINE_IN' ? 'Dine-in' : 'Takeaway',
+      notes: notes.trim() || undefined,
+    };
 
-      const response = await api.orders.create(payload);
-      clearCart();
-      onOrderSuccess(response);
+    try {
+      if (paymentMethod === 'UPI') {
+        // 1. Create Cashfree payment session via backend
+        const res = await api.payments.createOrder(payload);
+        const { paymentSessionId, paymentMode, orderId, isLiveEnvironment } = res;
+
+        if (isLiveEnvironment) {
+          // Launch official Cashfree UPI modal / Intent checkout
+          await launchCashfreeUPIPayment(paymentSessionId, paymentMode, '_modal');
+        }
+
+        // On return or simulation: navigate to payment verification screen
+        clearCart();
+        onClose();
+        navigate(`/payment/status?order_id=${orderId}`);
+      } else {
+        // Campus Meal Card (Direct 1-Tap)
+        const response = await api.orders.create(payload);
+        clearCart();
+        onOrderSuccess(response);
+      }
     } catch (err) {
       setError(parseApiError(err));
     } finally {
@@ -118,7 +139,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     {pickupPreference === 'asap' ? 'check_circle' : 'radio_button_unchecked'}
                   </span>
                 </div>
-                <span className="text-body-sm text-on-surface-variant mt-1">Ready in ~10-15 mins</span>
+                <span className="text-body-sm text-on-surface-variant mt-1">Ready in ~8-12 mins</span>
               </button>
 
               <button
@@ -139,7 +160,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     {pickupPreference === 'break' ? 'check_circle' : 'radio_button_unchecked'}
                   </span>
                 </div>
-                <span className="text-body-sm text-on-surface-variant mt-1">Scheduled for next interval</span>
+                <span className="text-body-sm text-on-surface-variant mt-1">Scheduled for next bell</span>
               </button>
             </div>
           </div>
@@ -251,29 +272,94 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             />
           </div>
 
-          {/* Payment Method (Simulated / Prepared for Phase 5) */}
-          <div className="space-y-2">
+          {/* Payment Method Selector (Cashfree UPI vs Meal Card) */}
+          <div className="space-y-3">
             <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-wider block">
-              Payment Method (Phase 5: Pre-authorized)
+              Choose Payment Method
             </span>
-            <div className="p-3.5 rounded-2xl border-2 border-primary bg-primary-fixed/15 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-xs">
-                  <span className="material-symbols-outlined text-xl">badge</span>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-label-md font-bold text-on-surface">Campus Meal Card</span>
-                    <span className="px-2 py-0.2 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-extrabold">
-                      1-Tap Order
-                    </span>
+
+            {/* Option 1: Cashfree UPI (Primary & Recommended) */}
+            <div
+              onClick={() => setPaymentMethod('UPI')}
+              className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                paymentMethod === 'UPI'
+                  ? 'border-primary bg-primary-fixed/15 shadow-sm'
+                  : 'border-outline-variant/40 bg-surface-container-lowest hover:border-outline'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-xs">
+                    <span className="material-symbols-outlined text-2xl">account_balance_wallet</span>
                   </div>
-                  <p className="text-body-sm text-on-surface-variant">Pay at counter or auto-billed (Simulated)</p>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-label-lg font-bold text-on-surface">UPI & Instant Redirection</span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold border border-emerald-300">
+                        Recommended
+                      </span>
+                    </div>
+                    <p className="text-body-sm text-on-surface-variant">
+                      Google Pay, PhonePe, Paytm, BHIM, QR or UPI Intent
+                    </p>
+                  </div>
                 </div>
+
+                <span
+                  className={`material-symbols-outlined text-xl ${
+                    paymentMethod === 'UPI' ? 'text-primary' : 'text-outline-variant'
+                  }`}
+                  data-weight={paymentMethod === 'UPI' ? 'fill' : 'normal'}
+                >
+                  {paymentMethod === 'UPI' ? 'check_circle' : 'radio_button_unchecked'}
+                </span>
               </div>
-              <span className="material-symbols-outlined text-primary text-xl" data-weight="fill">
-                check_circle
-              </span>
+
+              {/* UPI App Badges Bar */}
+              <div className="mt-3 pt-2.5 border-t border-outline-variant/20 flex items-center gap-2 overflow-x-auto text-label-sm font-bold text-on-surface-variant">
+                <span className="px-2 py-0.5 bg-surface-container rounded-md text-xs">GPay</span>
+                <span className="px-2 py-0.5 bg-surface-container rounded-md text-xs">PhonePe</span>
+                <span className="px-2 py-0.5 bg-surface-container rounded-md text-xs">Paytm</span>
+                <span className="px-2 py-0.5 bg-surface-container rounded-md text-xs">BHIM</span>
+                <span className="px-2 py-0.5 bg-surface-container rounded-md text-xs">UPI QR</span>
+                <span className="text-[11px] text-tertiary ml-auto font-semibold">Instant App Redirect</span>
+              </div>
+            </div>
+
+            {/* Option 2: Campus Meal Card */}
+            <div
+              onClick={() => setPaymentMethod('MEAL_CARD')}
+              className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                paymentMethod === 'MEAL_CARD'
+                  ? 'border-primary bg-primary-fixed/15 shadow-sm'
+                  : 'border-outline-variant/40 bg-surface-container-lowest hover:border-outline'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-xs">
+                    <span className="material-symbols-outlined text-2xl">badge</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-label-lg font-bold text-on-surface">Campus Meal Card</span>
+                      <span className="px-2 py-0.5 rounded-full bg-surface-container text-on-surface text-[10px] font-extrabold">
+                        1-Tap Auto
+                      </span>
+                    </div>
+                    <p className="text-body-sm text-on-surface-variant">Student ID Card balance</p>
+                  </div>
+                </div>
+
+                <span
+                  className={`material-symbols-outlined text-xl ${
+                    paymentMethod === 'MEAL_CARD' ? 'text-primary' : 'text-outline-variant'
+                  }`}
+                  data-weight={paymentMethod === 'MEAL_CARD' ? 'fill' : 'normal'}
+                >
+                  {paymentMethod === 'MEAL_CARD' ? 'check_circle' : 'radio_button_unchecked'}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -303,7 +389,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             <div className="pt-2 border-t border-outline-variant/30 flex justify-between items-baseline">
               <div>
                 <span className="text-headline-sm font-bold text-on-surface">Total Payable</span>
-                <span className="block text-body-sm text-on-surface-variant">Server-verified on placement</span>
+                <span className="block text-body-sm text-on-surface-variant">Verified by Cashfree & Bank</span>
               </div>
               <span className="text-headline-md font-extrabold text-primary">₹{finalTotal.toFixed(2)}</span>
             </div>
@@ -322,19 +408,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </button>
           <button
             type="button"
-            onClick={handlePlaceOrder}
+            onClick={handlePlaceOrderAndPay}
             disabled={isSubmitting}
             className="flex-[2] py-3 px-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-bold text-label-lg shadow-lg active:scale-98 transition-all flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>
                 <span className="animate-spin rounded-full h-5 w-5 border-2 border-on-primary border-t-transparent"></span>
-                <span>Transmitting Order...</span>
+                <span>Connecting to UPI...</span>
               </>
             ) : (
               <>
-                <span className="material-symbols-outlined text-xl">lock</span>
-                <span>Place Order • ₹{finalTotal.toFixed(0)}</span>
+                <span className="material-symbols-outlined text-xl">payments</span>
+                <span>
+                  {paymentMethod === 'UPI' ? `Pay with UPI • ₹${finalTotal.toFixed(0)}` : `Place Order • ₹${finalTotal.toFixed(0)}`}
+                </span>
                 <span className="material-symbols-outlined text-lg">arrow_forward</span>
               </>
             )}

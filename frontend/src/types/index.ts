@@ -93,8 +93,13 @@ export interface Payment {
   id: string;
   orderId: string;
   amount: number | string;
+  currency?: string;
   status: PaymentStatus;
   paymentMethod: string;
+  gateway?: string;
+  gatewayOrderId?: string | null;
+  gatewayPaymentId?: string | null;
+  cfPaymentSessionId?: string | null;
   transactionId?: string | null;
   paidAt?: string | null;
 }
@@ -139,7 +144,41 @@ export interface CreateOrderPayload {
   pickupPreference?: string;
   diningType?: string;
   notes?: string | null;
+  orderId?: string;
 }
+
+export interface CreatePaymentResponse {
+  orderId: string;
+  orderNumber: string;
+  amount: number;
+  currency: string;
+  paymentSessionId: string;
+  cfOrderId: string;
+  paymentMode: 'SANDBOX' | 'PRODUCTION';
+  isLiveEnvironment: boolean;
+  order: Order;
+}
+
+export interface PaymentStatusResponse {
+  orderId: string;
+  orderNumber: string;
+  paymentStatus: PaymentStatus;
+  paymentAmount: number;
+  currency: string;
+  paidAt?: string | null;
+  paymentMethod: string;
+  gatewayOrderId?: string | null;
+  gatewayPaymentId?: string | null;
+  order: Order;
+}
+
+export type PaymentProcessState =
+  | 'PAYMENT_INITIATING'
+  | 'PAYMENT_PROCESSING'
+  | 'PAYMENT_SUCCESS'
+  | 'PAYMENT_FAILED'
+  | 'PAYMENT_CANCELLED'
+  | 'PAYMENT_UNKNOWN';
 
 export interface NotificationItem {
   id: string;

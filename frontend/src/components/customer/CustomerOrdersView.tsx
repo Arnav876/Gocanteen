@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api, parseApiError } from '../../lib/api';
 import type { Order, OrderStatus } from '../../types';
 
@@ -17,6 +18,7 @@ const statusConfig: Record<OrderStatus, { label: string; bg: string; text: strin
 };
 
 export const CustomerOrdersView: React.FC<CustomerOrdersViewProps> = ({ onBackToMenu }) => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -162,7 +164,7 @@ export const CustomerOrdersView: React.FC<CustomerOrdersViewProps> = ({ onBackTo
               >
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-outline-variant/20">
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2.5 flex-wrap">
                     <span className="text-headline-md font-extrabold text-primary">{order.orderNumber}</span>
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-label-sm font-bold flex items-center gap-1 ${config.bg} ${config.text}`}
@@ -170,9 +172,27 @@ export const CustomerOrdersView: React.FC<CustomerOrdersViewProps> = ({ onBackTo
                       <span className="material-symbols-outlined text-sm">{config.icon}</span>
                       <span>{config.label}</span>
                     </span>
+
+                    {/* Payment Status Pill */}
+                    {order.payment?.status === 'PAID' ? (
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-label-sm font-bold border border-emerald-300 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs">verified</span>
+                        <span>Paid (UPI)</span>
+                      </span>
+                    ) : order.payment?.status === 'FAILED' ? (
+                      <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-label-sm font-bold border border-rose-300 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs">error</span>
+                        <span>Payment Failed</span>
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-label-sm font-bold border border-amber-300 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs animate-spin">sync</span>
+                        <span>Payment Pending</span>
+                      </span>
+                    )}
                   </div>
 
-                  <div className="text-right sm:text-right">
+                  <div className="text-left sm:text-right">
                     <span className="text-body-sm text-on-surface-variant block font-medium">Placed at {dateStr}</span>
                     <span className="text-label-sm font-bold text-on-surface">
                       {order.provider?.name || 'Stall'} • {order.provider?.counterNumber || 'Counter'}
@@ -231,6 +251,23 @@ export const CustomerOrdersView: React.FC<CustomerOrdersViewProps> = ({ onBackTo
                     ))}
                   </div>
                 </div>
+
+                {/* Unpaid Order Action Banner */}
+                {order.payment?.status !== 'PAID' && ['PLACED', 'ACCEPTED'].includes(order.status) && (
+                  <div className="p-3 rounded-xl bg-primary-fixed/20 border border-primary/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-body-sm text-on-surface">
+                      <span className="material-symbols-outlined text-primary text-base">info</span>
+                      <span>Payment is incomplete. Confirm with UPI to send ticket to kitchen.</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/payment/status?order_id=${order.id}`)}
+                      className="px-4 py-1.5 rounded-lg bg-primary text-on-primary font-bold text-label-sm shadow-xs hover:bg-primary-container transition whitespace-nowrap self-start sm:self-auto"
+                    >
+                      Complete UPI Payment
+                    </button>
+                  </div>
+                )}
 
                 {/* Footer / Total & Preferences */}
                 <div className="pt-3 border-t border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-body-sm">

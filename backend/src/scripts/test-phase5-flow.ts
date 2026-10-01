@@ -132,6 +132,20 @@ async function runEndToEndVerification() {
   console.log(`   Found customer order: ${foundCustOrder.orderNumber} with ${foundCustOrder.items.length} items`);
   console.log('   ✅ PASS: Customer order history verified.\n');
 
+  // TEST 7.5: Confirm Payment (Rule 10: Provider only sees PAID orders)
+  console.log('👉 [TEST 7.5] Confirm Payment via Cashfree Webhook...');
+  await req('/payments/webhook', {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'PAYMENT_SUCCESS_WEBHOOK',
+      data: {
+        order: { order_id: createdOrder.id, order_amount: createdOrder.totalAmount },
+        payment: { cf_payment_id: `cf_pay_${Date.now()}`, payment_status: 'SUCCESS' },
+      },
+    }),
+  });
+  console.log('   ✅ PASS: Payment confirmed.\n');
+
   // TEST 8: Provider 1 sees the Incoming Order
   console.log('👉 [TEST 8] Provider 1 Checks Incoming Orders (GET /api/orders/provider)...');
   const prov1OrdersRes = await req('/orders/provider', {
