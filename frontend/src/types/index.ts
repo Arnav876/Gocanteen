@@ -99,7 +99,7 @@ export interface Payment {
   gateway?: string;
   gatewayOrderId?: string | null;
   gatewayPaymentId?: string | null;
-  cfPaymentSessionId?: string | null;
+  gatewaySignature?: string | null;
   transactionId?: string | null;
   paidAt?: string | null;
 }
@@ -151,11 +151,15 @@ export interface CreatePaymentResponse {
   orderId: string;
   orderNumber: string;
   amount: number;
+  amountInPaise: number;
   currency: string;
-  paymentSessionId: string;
-  cfOrderId: string;
-  paymentMode: 'SANDBOX' | 'PRODUCTION';
-  isLiveEnvironment: boolean;
+  razorpayOrderId: string;
+  razorpayKeyId: string;
+  customer: {
+    name: string;
+    email: string;
+    phone: string;
+  };
   order: Order;
 }
 

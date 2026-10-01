@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { api, parseApiError } from '../../lib/api';
-import { launchCashfreeUPIPayment } from '../../lib/cashfree';
+import { launchRazorpayPayment } from '../../lib/razorpay';
 import type { Order } from '../../types';
 
 interface CheckoutModalProps {
@@ -54,19 +54,48 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
     try {
       if (paymentMethod === 'UPI') {
-        // 1. Create Cashfree payment session via backend
+        // 1. Create Razorpay payment order via backend
         const res = await api.payments.createOrder(payload);
-        const { paymentSessionId, paymentMode, orderId, isLiveEnvironment } = res;
+        const { razorpayOrderId, razorpayKeyId, amountInPaise, customer, orderId, orderNumber } = res;
 
-        if (isLiveEnvironment) {
-          // Launch official Cashfree UPI modal / Intent checkout
-          await launchCashfreeUPIPayment(paymentSessionId, paymentMode, '_modal');
-        }
-
-        // On return or simulation: navigate to payment verification screen
-        clearCart();
-        onClose();
-        navigate(`/payment/status?order_id=${orderId}`);
+        // 2. Launch official Razorpay standard checkout modal
+        await launchRazorpayPayment({
+          key: razorpayKeyId,
+          amount: amountInPaise,
+          currency: 'INR',
+          name: 'CampusBites',
+          description: `Order ${orderNumber} - ${stallName}`,
+          order_id: razorpayOrderId,
+          prefill: {
+            name: customer?.name || 'Student',
+            email: customer?.email || 'student@campusbites.edu',
+            contact: customer?.phone || '9876543210',
+          },
+          theme: {
+            color: '#895129',
+          },
+          handler: async (response) => {
+            try {
+              // Verify cryptographic signature with backend
+              await api.payments.verify({
+                orderId,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              });
+            } catch (vErr) {
+              console.warn('[Razorpay Checkout] Verification notice:', vErr);
+            }
+            clearCart();
+            onClose();
+            navigate(`/payment/status?order_id=${orderId}`);
+          },
+          modal: {
+            ondismiss: () => {
+              setIsSubmitting(false);
+            },
+          },
+        });
       } else {
         // Campus Meal Card (Direct 1-Tap)
         const response = await api.orders.create(payload);
@@ -75,7 +104,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       }
     } catch (err) {
       setError(parseApiError(err));
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -272,13 +300,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             />
           </div>
 
-          {/* Payment Method Selector (Cashfree UPI vs Meal Card) */}
+          {/* Payment Method Selector (Razorpay UPI vs Meal Card) */}
           <div className="space-y-3">
             <span className="text-label-sm font-bold text-on-surface-variant uppercase tracking-wider block">
               Choose Payment Method
             </span>
 
-            {/* Option 1: Cashfree UPI (Primary & Recommended) */}
+            {/* Option 1: Razorpay UPI (Primary & Recommended) */}
             <div
               onClick={() => setPaymentMethod('UPI')}
               className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
@@ -389,7 +417,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             <div className="pt-2 border-t border-outline-variant/30 flex justify-between items-baseline">
               <div>
                 <span className="text-headline-sm font-bold text-on-surface">Total Payable</span>
-                <span className="block text-body-sm text-on-surface-variant">Verified by Cashfree & Bank</span>
+                <span className="block text-body-sm text-on-surface-variant">Verified by Razorpay & Bank</span>
               </div>
               <span className="text-headline-md font-extrabold text-primary">₹{finalTotal.toFixed(2)}</span>
             </div>

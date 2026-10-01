@@ -27,7 +27,7 @@ export const PaymentStatusPage: React.FC = () => {
     }
 
     try {
-      // Query backend status endpoint (which synchronizes with Cashfree)
+      // Query backend status endpoint (which synchronizes with Razorpay)
       const data = await api.payments.getStatus(orderId);
       setPaymentData(data);
 
@@ -94,7 +94,7 @@ export const PaymentStatusPage: React.FC = () => {
 
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container border border-outline-variant/30 text-label-sm font-bold text-on-surface">
           <span className="material-symbols-outlined text-primary text-base">payments</span>
-          <span>Cashfree UPI Gateway</span>
+          <span>Razorpay UPI Gateway</span>
         </div>
       </header>
 
@@ -120,7 +120,7 @@ export const PaymentStatusPage: React.FC = () => {
                   Confirming Your Payment...
                 </h1>
                 <p className="text-body-md text-on-surface-variant max-w-md mx-auto">
-                  We are securely communicating with your UPI app and Cashfree to confirm payment authorization.
+                  We are securely communicating with your UPI app and Razorpay to confirm payment authorization.
                 </p>
               </div>
 
@@ -265,7 +265,7 @@ export const PaymentStatusPage: React.FC = () => {
                   <span>No Money Deducted?</span>
                 </div>
                 <p className="text-on-surface-variant">
-                  If money was deducted from your bank account, Cashfree will automatically reconcile and confirm the order within a few minutes.
+                  If money was deducted from your bank account, Razorpay will automatically reconcile and confirm the order within a few minutes.
                 </p>
               </div>
 
@@ -305,7 +305,7 @@ export const PaymentStatusPage: React.FC = () => {
                   Bank Confirmation Pending
                 </h1>
                 <p className="text-body-md text-on-surface-variant max-w-md mx-auto">
-                  Your UPI app is processing the payment. As soon as the webhook arrives from Cashfree, your order will automatically be confirmed.
+                  Your UPI app is processing the payment. As soon as the webhook arrives from Razorpay, your order will automatically be confirmed.
                 </p>
               </div>
 
@@ -336,7 +336,7 @@ export const PaymentStatusPage: React.FC = () => {
       {/* Footer Security Badge */}
       <footer className="max-w-xl mx-auto w-full py-3 text-center text-body-sm text-on-surface-variant flex items-center justify-center gap-1.5">
         <span className="material-symbols-outlined text-sm text-tertiary">lock</span>
-        <span>256-Bit Encrypted Payments Powered by Cashfree Payments</span>
+        <span>256-Bit Encrypted Payments Powered by Razorpay</span>
       </footer>
     </div>
   );

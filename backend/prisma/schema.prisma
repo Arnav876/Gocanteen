@@ -192,10 +192,10 @@ model Payment {
   currency           String        @default("INR")
   status             PaymentStatus @default(PENDING)
   paymentMethod      String        @default("UPI")
-  gateway            String        @default("CASHFREE")
+  gateway            String        @default("RAZORPAY")
   gatewayOrderId     String?
   gatewayPaymentId   String?
-  cfPaymentSessionId String?
+  gatewaySignature   String?
   transactionId      String?
   paidAt             DateTime?
   createdAt          DateTime      @default(now())

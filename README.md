@@ -36,7 +36,7 @@ npm install
 npx prisma generate
 npm run dev
 ```
-Backend runs on `http://localhost:5000` with live Socket.IO gateway.
+Backend runs on `http://localhost:5001` with live Socket.IO gateway.
 
 ### 2. Frontend Setup
 ```bash

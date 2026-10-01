@@ -10,9 +10,8 @@ export const ENV = {
   FRONTEND_URL: process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:5173',
   BACKEND_URL: process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5001}`,
 
-  // Cashfree Payments Configuration
-  CASHFREE_APP_ID: process.env.CASHFREE_APP_ID || '',
-  CASHFREE_SECRET_KEY: process.env.CASHFREE_SECRET_KEY || '',
-  CASHFREE_ENV: (process.env.CASHFREE_ENV?.toUpperCase() === 'PRODUCTION' ? 'PRODUCTION' : 'SANDBOX') as 'SANDBOX' | 'PRODUCTION',
-  CASHFREE_API_VERSION: process.env.CASHFREE_API_VERSION || '2023-08-01',
+  // Razorpay Configuration (Test Mode)
+  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || '',
+  RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET || '',
+  RAZORPAY_WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET || '',
 };

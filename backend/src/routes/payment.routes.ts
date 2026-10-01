@@ -4,7 +4,7 @@ import { requireAuth } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-// Public Webhook from Cashfree
+// Public Webhook from Razorpay
 router.post('/webhook', PaymentController.handleWebhook);
 
 // Protected Customer / Authenticated Endpoints

@@ -1,4 +1,6 @@
 import { prisma } from '../config/prisma';
+import crypto from 'crypto';
+import { ENV } from '../config/env';
 
 const API_BASE = 'http://localhost:5001/api';
 
@@ -16,7 +18,7 @@ async function req(url: string, options: RequestInit = {}) {
 
 async function runPaymentSuite() {
   console.log('=====================================================');
-  console.log('STARTING CASHFREE UPI PAYMENT INTEGRATION TEST SUITE');
+  console.log('STARTING RAZORPAY UPI PAYMENT INTEGRATION TEST SUITE');
   console.log('=====================================================\n');
 
   // 1. Health check
@@ -70,11 +72,11 @@ async function runPaymentSuite() {
     headers: { Authorization: `Bearer ${customerToken}` },
     body: JSON.stringify({
       items: [
-        { foodId: provFoods[0].id, quantity: 2, specialInstructions: 'UPI Test Order' },
+        { foodId: provFoods[0].id, quantity: 2, specialInstructions: 'Razorpay UPI Test Order' },
       ],
       pickupPreference: 'Pick up ASAP',
       diningType: 'Takeaway',
-      notes: 'Testing Cashfree UPI Redirection',
+      notes: 'Testing Razorpay UPI Checkout',
     }),
   });
 
@@ -82,12 +84,12 @@ async function runPaymentSuite() {
     throw new Error(`Failed to create payment order: ${JSON.stringify(createPayRes.data)}`);
   }
 
-  const { orderId, orderNumber, amount, paymentSessionId, cfOrderId } = createPayRes.data.data;
+  const { orderId, orderNumber, amount, amountInPaise, razorpayOrderId, razorpayKeyId } = createPayRes.data.data;
   console.log(`   Order Created: ${orderNumber} (ID: ${orderId})`);
-  console.log(`   Calculated Total Amount: ₹${amount}`);
-  console.log(`   Cashfree Payment Session ID: ${paymentSessionId}`);
-  console.log(`   Cashfree Order ID: ${cfOrderId}`);
-  console.log('   ✅ PASS: Payment session successfully generated.\n');
+  console.log(`   Calculated Total Amount: ₹${amount} (${amountInPaise} paise)`);
+  console.log(`   Razorpay Order ID: ${razorpayOrderId}`);
+  console.log(`   Razorpay Public Key ID: ${razorpayKeyId}`);
+  console.log('   ✅ PASS: Razorpay order successfully created.\n');
 
   // 6. Section 10 Rule: Provider must NOT see the order while payment is PENDING
   console.log('👉 [TEST 6] Verification: Order must NOT appear in Provider KDS while payment is PENDING...');
@@ -112,27 +114,66 @@ async function runPaymentSuite() {
   }
   console.log('   ✅ PASS: Payment status endpoint confirmed PENDING.\n');
 
-  // 8. Simulate Cashfree Webhook for Payment Confirmation (POST /api/payments/webhook)
-  console.log('👉 [TEST 8] Simulate Cashfree SUCCESS Webhook (POST /api/payments/webhook)...');
+  // 8. Test Client Payment Verification Endpoint (POST /api/payments/verify) with Valid Signature
+  console.log('👉 [TEST 8] Test Signature Verification Endpoint (POST /api/payments/verify)...');
+  const mockPaymentId = `pay_test_${Date.now()}`;
+  const validSignature = crypto
+    .createHmac('sha256', ENV.RAZORPAY_KEY_SECRET)
+    .update(`${razorpayOrderId}|${mockPaymentId}`)
+    .digest('hex');
+
+  const verifyRes = await req('/payments/verify', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${customerToken}` },
+    body: JSON.stringify({
+      orderId,
+      razorpay_order_id: razorpayOrderId,
+      razorpay_payment_id: mockPaymentId,
+      razorpay_signature: validSignature,
+    }),
+  });
+
+  if (verifyRes.status !== 200 || !verifyRes.data.data.isPaid) {
+    throw new Error(`Signature verification failed: ${JSON.stringify(verifyRes.data)}`);
+  }
+  console.log(`   Verification Response: Status = ${verifyRes.data.data.status}, isPaid = ${verifyRes.data.data.isPaid}`);
+  console.log('   ✅ PASS: Cryptographic signature verified and payment marked PAID.\n');
+
+  // 9. Test Signature Verification with Tampered Signature (Security Guard)
+  console.log('👉 [TEST 9] Security: Test Tampered Signature Rejection...');
+  const tamperedRes = await req('/payments/verify', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${customerToken}` },
+    body: JSON.stringify({
+      orderId,
+      razorpay_order_id: razorpayOrderId,
+      razorpay_payment_id: mockPaymentId,
+      razorpay_signature: 'fake_tampered_signature_1234567890abcdef',
+    }),
+  });
+  if (tamperedRes.status !== 400) {
+    throw new Error(`Expected 400 Bad Request for tampered signature, got ${tamperedRes.status}`);
+  }
+  console.log(`   Received expected 400 rejection: "${tamperedRes.data.error || tamperedRes.data.message}"`);
+  console.log('   ✅ PASS: Tampered signature rejected.\n');
+
+  // 10. Simulate Razorpay Webhook for Payment Confirmation (POST /api/payments/webhook)
+  console.log('👉 [TEST 10] Simulate Razorpay payment.captured Webhook (POST /api/payments/webhook)...');
   const webhookPayload = {
-    type: 'PAYMENT_SUCCESS_WEBHOOK',
-    event_time: new Date().toISOString(),
-    data: {
-      order: {
-        order_id: orderId,
-        order_amount: amount,
-        order_currency: 'INR',
-      },
+    event: 'payment.captured',
+    payload: {
       payment: {
-        cf_payment_id: `cf_pay_${Date.now()}`,
-        payment_status: 'SUCCESS',
-        payment_amount: amount,
-        payment_currency: 'INR',
-        payment_time: new Date().toISOString(),
-        payment_method: {
-          upi: {
-            channel: 'intent',
-            upi_id: 'student@okaxis',
+        entity: {
+          id: mockPaymentId,
+          order_id: razorpayOrderId,
+          amount: amountInPaise,
+          currency: 'INR',
+          status: 'captured',
+          method: 'upi',
+          created_at: Math.floor(Date.now() / 1000),
+          notes: {
+            orderId,
+            orderNumber,
           },
         },
       },
@@ -147,30 +188,30 @@ async function runPaymentSuite() {
   if (webhookRes.status !== 200 || webhookRes.data.status !== 'OK') {
     throw new Error(`Webhook failed: ${JSON.stringify(webhookRes.data)}`);
   }
-  console.log('   ✅ PASS: Webhook processed successfully.\n');
+  console.log('   ✅ PASS: Razorpay Webhook processed successfully.\n');
 
-  // 9. Verify Idempotency on Duplicate Webhook
-  console.log('👉 [TEST 9] Test Webhook Idempotency (Sending duplicate webhook)...');
+  // 11. Verify Idempotency on Duplicate Webhook
+  console.log('👉 [TEST 11] Test Webhook Idempotency (Sending duplicate webhook)...');
   const dupWebhookRes = await req('/payments/webhook', {
     method: 'POST',
     body: JSON.stringify(webhookPayload),
   });
   if (dupWebhookRes.status !== 200) throw new Error('Idempotent webhook handling failed');
-  console.log('   ✅ PASS: Duplicate webhook handled idempotently.\n');
+  console.log('   ✅ PASS: Duplicate webhook handled idempotently without error.\n');
 
-  // 10. Verify DB status is now PAID
-  console.log('👉 [TEST 10] Verify Database Status is updated to PAID...');
+  // 12. Verify DB status is PAID
+  console.log('👉 [TEST 12] Verify Database Status is updated to PAID...');
   const dbPayment = await prisma.payment.findUnique({
     where: { orderId },
   });
   if (dbPayment?.status !== 'PAID') {
     throw new Error(`Expected DB payment to be PAID, but got ${dbPayment?.status}`);
   }
-  console.log(`   DB Payment Record: Status = ${dbPayment.status}, Gateway Ref = ${dbPayment.gatewayPaymentId}`);
+  console.log(`   DB Payment Record: Status = ${dbPayment.status}, Gateway Ref = ${dbPayment.gatewayPaymentId}, Gateway Order = ${dbPayment.gatewayOrderId}`);
   console.log('   ✅ PASS: Database reflects PAID status.\n');
 
-  // 11. Section 10 Rule: Provider NOW receives the confirmed order
-  console.log('👉 [TEST 11] Verification: Provider KDS receives the confirmed order after payment...');
+  // 13. Section 10 Rule: Provider NOW receives the confirmed order
+  console.log('👉 [TEST 13] Verification: Provider KDS receives the confirmed order after payment...');
   const provPaidOrdersRes = await req('/orders/provider', {
     headers: { Authorization: `Bearer ${providerToken}` },
   });
@@ -181,8 +222,8 @@ async function runPaymentSuite() {
   console.log(`   Found confirmed order ${foundInKdsPaid.orderNumber} in Provider queue with status: ${foundInKdsPaid.status}`);
   console.log('   ✅ PASS: Confirmed order delivered to provider.\n');
 
-  // 12. Security Test: Unauthorized access to payment status
-  console.log('👉 [TEST 12] Security: Verify unauthorized user cannot access payment details...');
+  // 14. Security Test: Unauthorized access to payment status
+  console.log('👉 [TEST 14] Security: Verify unauthorized user cannot access payment details...');
   const otherUserRes = await req('/auth/login', {
     method: 'POST',
     body: JSON.stringify({
@@ -202,7 +243,7 @@ async function runPaymentSuite() {
   console.log('   ✅ PASS: Payment authorization guard verified.\n');
 
   console.log('=====================================================');
-  console.log('ALL CASHFREE UPI INTEGRATION TESTS PASSED 100%');
+  console.log('ALL RAZORPAY UPI INTEGRATION TESTS PASSED 100%');
   console.log('=====================================================');
 }
 

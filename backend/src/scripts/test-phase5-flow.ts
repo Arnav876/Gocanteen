@@ -133,14 +133,26 @@ async function runEndToEndVerification() {
   console.log('   ✅ PASS: Customer order history verified.\n');
 
   // TEST 7.5: Confirm Payment (Rule 10: Provider only sees PAID orders)
-  console.log('👉 [TEST 7.5] Confirm Payment via Cashfree Webhook...');
+  console.log('👉 [TEST 7.5] Confirm Payment via Razorpay Webhook...');
   await req('/payments/webhook', {
     method: 'POST',
     body: JSON.stringify({
-      type: 'PAYMENT_SUCCESS_WEBHOOK',
-      data: {
-        order: { order_id: createdOrder.id, order_amount: createdOrder.totalAmount },
-        payment: { cf_payment_id: `cf_pay_${Date.now()}`, payment_status: 'SUCCESS' },
+      event: 'payment.captured',
+      payload: {
+        payment: {
+          entity: {
+            id: `pay_${Date.now()}`,
+            order_id: `order_${Date.now()}`,
+            amount: Math.round(Number(createdOrder.totalAmount) * 100),
+            currency: 'INR',
+            status: 'captured',
+            method: 'upi',
+            notes: {
+              orderId: createdOrder.id,
+              orderNumber: createdOrder.orderNumber,
+            },
+          },
+        },
       },
     }),
   });

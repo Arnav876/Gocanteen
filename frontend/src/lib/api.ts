@@ -221,11 +221,16 @@ export const api = {
       );
       return res.data.data;
     },
-    verify: async (orderId: string): Promise<{ orderId: string; orderNumber: string; status: string; isPaid: boolean }> => {
+    verify: async (payload: {
+      orderId: string;
+      razorpay_order_id: string;
+      razorpay_payment_id: string;
+      razorpay_signature: string;
+    }): Promise<{ orderId: string; orderNumber: string; status: string; isPaid: boolean }> => {
       const res = await apiClient.post<{
         success: boolean;
         data: { orderId: string; orderNumber: string; status: string; isPaid: boolean };
-      }>('/payments/verify', { orderId });
+      }>('/payments/verify', payload);
       return res.data.data;
     },
   },
